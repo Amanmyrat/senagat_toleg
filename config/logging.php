@@ -123,6 +123,11 @@ return [
             'handler' => NullHandler::class,
         ],
 
+        'belet' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/belet/belet.log'),
+            'level' => 'debug',
+        ],
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],

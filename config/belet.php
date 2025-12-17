@@ -12,4 +12,4 @@ return [
         ? env('BELET_TEST_AUTH_TOKEN', '')
         : env('BELET_PRODUCTION_AUTH_TOKEN', ''),
 
-    ];
+];

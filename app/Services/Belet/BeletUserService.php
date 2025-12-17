@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Belet;
 
 use Illuminate\Support\Facades\Http;
 
-class BeletService
+class BeletUserService
 {
     protected string $url;
+
     protected string $authToken;
 
     public function __construct()
@@ -15,11 +16,6 @@ class BeletService
         $this->authToken = config('belet.auth_token');
     }
 
-    /**
-     *
-     * @param string $phoneNum
-     * @return array
-     */
     public function checkPhone(string $phoneNum): array
     {
         if (empty($phoneNum)) {
@@ -27,18 +23,18 @@ class BeletService
                 'success' => false,
                 'error' => [
                     'code' => 1,
-                    'message' => 'Phone number cannot be empty'
+                    'message' => 'Phone number cannot be empty',
                 ],
-                'data' => null
+                'data' => null,
             ];
         }
 
         try {
             $response = Http::withHeaders([
-                'Authorization' =>  $this->authToken,
+                'Authorization' => $this->authToken,
 
                 'Accept' => 'application/json',
-            ])->get($this->url . '/api/v2/users/check', [
+            ])->get($this->url.'/api/v2/users/check', [
                 'phone' => $phoneNum,
             ]);
 
@@ -49,10 +45,10 @@ class BeletService
             return [
                 'success' => false,
                 'error' => $response->json('error') ?? [
-                        'code' => $response->status(),
-                        'message' => $response->body()
-                    ],
-                'data' => null
+                    'code' => $response->status(),
+                    'message' => $response->body(),
+                ],
+                'data' => null,
             ];
 
         } catch (\Exception $e) {
@@ -60,9 +56,9 @@ class BeletService
                 'success' => false,
                 'error' => [
                     'code' => 500,
-                    'message' => $e->getMessage()
+                    'message' => $e->getMessage(),
                 ],
-                'data' => null
+                'data' => null,
             ];
         }
     }

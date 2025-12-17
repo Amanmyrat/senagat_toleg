@@ -33,6 +33,7 @@ class BeletCheckPhoneRequest extends FormRequest
             'phone' => ['required', 'string', 'regex:/^[0-9]{11}$/'],
         ];
     }
+
     public function messages(): array
     {
         return [

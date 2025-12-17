@@ -22,7 +22,6 @@ enum ErrorMessage: string
     case LOAN_ORDER_CREATION_FAILED = 'loan_order_creation_failed';
     case CREDIT_REQUIRED = 'select_loan';
     case YEARS_REQUIRED = 'enter_the_loan_term.';
-    case AMOUNT_REQUIRED = 'amount_required';
     case INTEREST_REQUIRED = 'interest_required';
     case PATENT_NUMBER_REQUIRED = 'patent_number_required';
     case REGISTRATION_NUMBER_REQUIRED = 'registration_number_required';
@@ -36,7 +35,6 @@ enum ErrorMessage: string
     case COUNTRY_REQUIRED = 'country_required';
     case BANK_BRANCH_REQUIRED = 'bank_branch_required';
     case TERM_MIN = 'term_min';
-    case AMOUNT_MIN = 'amount_min';
     case MONTHLY_PAYMENT_REQUIRED = 'monthly_payment_required';
     case ROLE_REQUIRED = 'role_required';
     case ROLE_INVALID = 'role_invalid';
@@ -84,7 +82,6 @@ enum ErrorMessage: string
     case OTP_SESSION_INVALID = 'otp_session_invalid';
     case INCORRECT_PASSWORD = 'incorrect_password';
     case USER_PROFILE_ALREADY_EXISTS = 'user_profile_already_exists';
-    case AMOUNT_EXCEEDS_LIMIT = 'requested_amount_exceeds_credit_limit';
     case TERM_EXCEEDS_LIMIT = 'requested_term_exceeds_credit_limit';
     case SCAN_PASSPORT_FILE = 'passport_scan_must_be_a_file.';
     case SCAN_PASSPORT_MIMES = 'passport_scan_must_be_a_JPG,_JPEG,_PNG,_or_PDF_file.';
@@ -92,26 +89,15 @@ enum ErrorMessage: string
 
     // #2
 
-    case DEPOSIT_TYPE_NOT_FOUND = 'deposit_type_not_found.';
-    case TARIFF_TYPE_NOT_FOUND = 'tariff_type_not_found.';
-    case AWARD_TYPE_NOT_FOUND = 'award_type_not_found.';
-    case THIS_LOAN_CANNOT_BE_APPLIED_ONLINE = 'this_loan_cannot_be_applied_online';
-    case INVALID_OR_EXPIRED_OTP ='invalid_or_expired_otp';
-    case INVALID_SECRET_WORD_TYPE='secret_word_must_be_a_valid_string';
-    case PAYMENT_TYPE_REQUIRED = 'payment_type_is_required';
-    case PAYMENT_TYPE_INTEGER = 'payment_type_must_be_a_valid_id';
-    case PAYMENT_TYPE_NOT_EXIST = 'selected_payment_type_does_not_exist';
-
-    case BRANCH_REQUIRED = 'branch_is_required';
-    case BRANCH_INTEGER = 'branch_must_be_a_valid_id';
-    case BRANCH_NOT_EXIST = 'selected_branch_does_not_exist_or_is_not_a_valid_branch';
-
-    case UPLOADED_FILES_REQUIRED = 'you_must_upload_at_least_one_file';
-    case UPLOADED_FILES_ARRAY = 'uploaded_files_must_be_an_array';
-    case UPLOADED_FILES_MIN = 'you_must_upload_at_least_one_file_min';
-
-    case UPLOADED_FILE_ITEM = 'each_uploaded_item_must_be_a_valid_file';
-    case UPLOADED_FILE_MAX = 'each_file_cannot_exceed_10mb_in_size';
-    case UPLOADED_FILES_COUNT = 'exactly_{count}_files_must_be_uploaded';
-
+    case BANK_ID_REQUIRED = 'bank_id_is_required.';
+    case BANK_ID_INVALID = 'bank_id_must_be_a_valid_integer.';
+    case AMOUNT_REQUIRED = 'amount_is_required.';
+    case AMOUNT_INVALID = 'amount_must_be_a_numeric_value.';
+    case AMOUNT_MIN = 'amount_must_be_at_least_1_manat.';
+    case RETURN_URL_REQUIRED = 'return_URL_is_required.';
+    case RETURN_URL_INVALID = 'return_URL_must_be_a_valid_URL.';
+    case ORDER_ID_OR_PAY_ID_REQUIRED = 'either_orderId_or_pay_id_is_required.';
+    case ORDER_ID_INVALID = 'orderId_must_be_a_valid_string.';
+    case PAY_ID_INVALID = 'pay_id_must_be_a_valid_string.';
+    case ID_REQUIRED = 'order_ID_is_required';
 }
