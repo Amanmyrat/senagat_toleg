@@ -49,13 +49,13 @@ class BeletBalanceTopUpRequest extends FormRequest
              */
             'phone' => ['required', 'string', 'regex:/^[0-9]{11}$/'],
 
-            /**
-             * Return Url.
-             *
-             *
-             * @example 99365021730
-             */
-            'returnUrl' => ['required', 'url'],
+//            /**
+//             * Return Url.
+//             *
+//             *
+//             * @example 99365021730
+//             */
+//            'returnUrl' => ['required', 'url'],
 
         ];
     }

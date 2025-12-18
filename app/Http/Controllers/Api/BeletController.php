@@ -5,16 +5,41 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BalanceConfirmRequest;
 use App\Http\Requests\BeletBalanceTopUpRequest;
+use App\Http\Requests\BeletCheckPhoneRequest;
 use App\Services\Belet\BeletBalanceService;
+use App\Services\Belet\BeletBankService;
+use App\Services\Belet\BeletOrderStatusService;
+use App\Services\Belet\BeletUserService;
 use Illuminate\Http\JsonResponse;
 
-class BeletBalanceController extends Controller
+class BeletController extends Controller
 {
+    protected BeletBankService $banks;
     protected BeletBalanceService $balances;
+    protected BeletOrderStatusService $status;
 
-    public function __construct(BeletBalanceService $balances)
+
+    public function __construct(
+        BeletBankService $banks,
+        BeletBalanceService $balances,
+        BeletOrderStatusService $status)
     {
+        $this->banks = $banks;
         $this->balances = $balances;
+        $this->status = $status;
+
+    }
+
+    /**
+     * Banks list
+     *
+     * @unauthenticated
+     */
+    public function banks()
+    {
+        $result = $this->banks->getBanks();
+
+        return new JsonResponse($result);
     }
 
     /**
@@ -61,10 +86,33 @@ class BeletBalanceController extends Controller
         BalanceConfirmRequest $request,
         BeletBalanceService $balanceService
     ): JsonResponse {
-        $query = $request->only(['orderId', 'pay_id']);
+        $query = $request->only(['orderId',]);
 
         return response()->json(
             $balanceService->confirm($query)
         );
+    }
+    /**
+     * Check User
+     *
+     * @unauthenticated
+     */
+    public function checkPhone(BeletCheckPhoneRequest $request, BeletUserService $belet)
+    {
+        $phone = $request->input('phone');
+        $result = $belet->checkPhone($phone);
+
+        return new JsonResponse($result);
+    }
+    /**
+     * Order status
+     *
+     * @unauthenticated
+     */
+    public function status(string $id): JsonResponse
+    {
+        $response = $this->status->checkStatus($id);
+
+        return new JsonResponse($response);
     }
 }

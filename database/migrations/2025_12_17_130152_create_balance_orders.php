@@ -22,7 +22,7 @@ return new class extends Migration
             $table->enum('status', ['pending', 'confirmed', 'failed'])->default('pending');
             $table->integer('error_code')->nullable();
             $table->string('error_message')->nullable();
-            $table->string('return_url');
+            $table->string('return_url')->nullable();
             $table->ipAddress('client_ip');
             $table->timestamps();
         });

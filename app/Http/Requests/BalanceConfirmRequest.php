@@ -30,16 +30,7 @@ class BalanceConfirmRequest extends FormRequest
              *
              * @example 1
              */
-            'orderId' => ['required_without:pay_id', 'string'],
-
-            /**
-             * Order Id.
-             *
-             * @var string
-             *
-             * @example 1
-             */
-            'pay_id' => ['required_without:orderId', 'string'],
+            'orderId' => ['required', 'string'],
         ];
     }
 

@@ -124,10 +124,12 @@ return [
         ],
 
         'belet' => [
-            'driver' => 'single',
+            'driver' => 'daily',
             'path' => storage_path('logs/belet/belet.log'),
-            'level' => 'debug',
-        ],
+            'level' => 'info',
+            'days' => 30,
+            ],
+
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],

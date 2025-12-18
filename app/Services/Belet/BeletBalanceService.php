@@ -79,7 +79,7 @@ class BeletBalanceService
             $order->update([
                 'order_id' => $response['data']['order_id'] ?? null,
             ]);
-            Log::info('Top-up success', ['order_id' => $order->order_id]);
+            Log::channel('belet')->info('Top-up success', ['order_id' => $order->order_id]);
         } else {
             $order->update([
                 'status' => 'failed',
@@ -91,19 +91,30 @@ class BeletBalanceService
 
         return $response;
     }
-
+    /**
+     *  Balance Confirm
+     */
     public function confirm(array $query): array
     {
         $identifier = $query['orderId'] ?? $query['pay_id'] ?? null;
-
-        $order = BalanceOrder::where('order_id', $identifier)
-            ->orWhere('pay_id', $identifier)
-            ->first();
-
+        if (! $identifier) {
+            return [
+                'success' => false,
+                'error' => [
+                    'code' => 4,
+                    'message' => 'Invalid Query Params'
+                ],
+                'data' => null,
+            ];
+        }
+        $order = BalanceOrder::where('order_id', $identifier)->first();
         if (! $order) {
             return [
                 'success' => false,
-                'error' => ['code' => 5, 'message' => 'Payment not found'],
+                'error' => [
+                    'code' => 5,
+                    'message' => 'Payment_not_found'
+                ],
                 'data' => null,
             ];
         }
@@ -111,18 +122,44 @@ class BeletBalanceService
         if ($order->status === 'confirmed') {
             return [
                 'success' => false,
-                'error' => ['code' => 6, 'message' => 'Payment already activated'],
+                'error' => [
+                    'code' => 6,
+                    'message' => 'Payment already activated'
+                ],
                 'data' => null,
             ];
         }
 
-        $response = Http::withHeaders([
-            'Authorization' => $this->authToken,
-            'Accept' => 'application/json',
-        ])->post($this->url.'/api/v2/balance/confirm', $query)
-            ->json();
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => $this->authToken,
+                'Accept' => 'application/json',
+            ])->post($this->url . '/api/v2/balance/confirm?' . http_build_query($query))
+                ->throw()
+                ->json();
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            $response = $e->response->json() ?? [
+                    'success' => false,
+                    'error' => [
+                        'code' => 8,
+                        'message' => $e->getMessage()
+                    ],
+                    'data' => null
+                ];
+            $order->update([
+                'status' => 'failed',
+                'error_code' => $response['error']['code'] ?? null,
+                'error_message' => $response['error']['message'] ?? null,
+            ]);
 
-        if ($response['success']) {
+            Log::channel('belet')->error('Top-up confirm failed', [
+                'order_id' => $order->order_id,
+                'error' => $response['error'] ?? null
+            ]);
+
+            return $response;
+        }
+        if (($response['success'] ?? false) === true) {
             $order->update(['status' => 'confirmed']);
             Log::info('Top-up confirmed', ['order_id' => $order->order_id]);
         } else {
@@ -131,9 +168,12 @@ class BeletBalanceService
                 'error_code' => $response['error']['code'] ?? null,
                 'error_message' => $response['error']['message'] ?? null,
             ]);
-            Log::channel('belet')->error('Top-up confirm failed', ['order_id' => $order->order_id, 'error' => $response['error']]);
+            Log::channel('belet')->error('Top-up confirm failed', [
+                'order_id' => $order->order_id,
+                'error' => $response['error'] ?? null,
+            ]);
         }
-
         return $response;
     }
+
 }
