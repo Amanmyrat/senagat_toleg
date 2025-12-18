@@ -41,7 +41,16 @@ class BeletBalanceService
                 ],
                 'data' => null,
             ];
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            return [
+                'success' => false,
+                'error' => [
+                    'code' => 500,
+                    'message' => "No internet connection",
+                ],
+                'data' => null,
+            ];
+        }catch (\Exception $e) {
             return [
                 'success' => false,
                 'error' => [
@@ -59,34 +68,79 @@ class BeletBalanceService
     public function topUp(array $payload): array
     {
         $order = BalanceOrder::create([
-            'user_id' => $payload['user_id'] ?? null,
-            'bank_id' => $payload['bank_id'],
-            'amount' => $payload['amount_in_manats'],
-            'phone' => $payload['phone'],
+            'user_id'    => $payload['user_id'] ?? null,
+            'bank_id'    => $payload['bank_id'],
+            'amount'     => $payload['amount_in_manats'],
+            'phone'      => $payload['phone'],
             'return_url' => $payload['returnUrl'],
-            'client_ip' => $payload['client_ip'],
-            'status' => 'pending',
+            'client_ip'  => $payload['client_ip'],
+            'status'     => 'pending',
         ]);
 
-        Log::channel('belet')->info('Top-up request created', ['order_id' => $order->id, 'payload' => $payload]);
+        Log::channel('belet')->info('Top-up request created', [
+            'order_id' => $order->id,
+            'payload'  => $payload
+        ]);
 
-        $response = Http::withHeaders([
-            'Authorization' => $this->authToken,
-            'Accept' => 'application/json',
-        ])->post($this->url.'/api/v2/balance/top-up', $payload)->json();
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => $this->authToken,
+                'Accept'        => 'application/json',
+            ])
+                ->post($this->url . '/api/v2/balance/top-up', $payload)
+                ->throw()
+                ->json();
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            return [
+                'success' => false,
+                'error' => [
+                    'code'    => 500,
+                    'message' => "No internet connection",
+                ],
+                'data' => null,
+            ];
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+            $response = $e->response->json() ?? [
+                    'success' => false,
+                    'error'   => [
+                        'code'    => 8,
+                        'message' => $e->getMessage(),
+                    ],
+                    'data' => null
+                ];
 
-        if ($response['success']) {
+            $order->update([
+                'status'        => 'failed',
+                'error_code'    => $response['error']['code'] ?? null,
+                'error_message' => $response['error']['message'] ?? null,
+            ]);
+
+            Log::channel('belet')->error('Top-up failed', [
+                'order_id' => $order->id,
+                'error'    => $response['error'] ?? null
+            ]);
+
+            return $response;
+        }
+
+        if (($response['success'] ?? false) === true) {
             $order->update([
                 'order_id' => $response['data']['order_id'] ?? null,
+                'status'   => 'pending',
             ]);
+
             Log::channel('belet')->info('Top-up success', ['order_id' => $order->order_id]);
         } else {
             $order->update([
-                'status' => 'failed',
-                'error_code' => $response['error']['code'] ?? null,
+                'status'        => 'failed',
+                'error_code'    => $response['error']['code'] ?? null,
                 'error_message' => $response['error']['message'] ?? null,
             ]);
-            Log::channel('belet')->error('Top-up failed', ['order_id' => $order->id, 'error' => $response['error']]);
+
+            Log::channel('belet')->error('Top-up failed', [
+                'order_id' => $order->id,
+                'error'    => $response['error'] ?? null
+            ]);
         }
 
         return $response;
@@ -137,7 +191,16 @@ class BeletBalanceService
             ])->post($this->url . '/api/v2/balance/confirm?' . http_build_query($query))
                 ->throw()
                 ->json();
-        } catch (\Illuminate\Http\Client\RequestException $e) {
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            return [
+                'success' => false,
+                'error' => [
+                    'code' => 500,
+                    'message' => "No internet connection",
+                ],
+                'data' => null,
+            ];
+        }catch (\Illuminate\Http\Client\RequestException $e) {
             $response = $e->response->json() ?? [
                     'success' => false,
                     'error' => [
