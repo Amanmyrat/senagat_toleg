@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -22,7 +21,9 @@ class Admin extends Authenticatable
         'password' => 'hashed',
 
     ];
-    public function canAccessPanel(Panel $panel): bool {
+
+    public function canAccessPanel(Panel $panel): bool
+    {
         return true;
     }
 }
