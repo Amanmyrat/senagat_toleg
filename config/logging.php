@@ -127,7 +127,7 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/belet/belet.log'),
             'level' => 'info',
-            'days' => 30,
+            'days' => 60,
             ],
 
         'emergency' => [

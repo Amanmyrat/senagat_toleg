@@ -31,7 +31,7 @@ class BeletOrderStatusService
                 'success' => false,
                 'error' => [
                     'code' => 500,
-                    'message' => $e->getMessage('ajshdaksh'),
+                    'message' => $e->getMessage(),
                 ],
                 'data' => null,
             ];
