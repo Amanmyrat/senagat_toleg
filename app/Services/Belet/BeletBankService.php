@@ -40,7 +40,16 @@ class BeletBankService
                 ],
                 'data' => null,
             ];
-        } catch (\Exception $e) {
+        } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            return [
+                'success' => false,
+                'error' => [
+                    'code' => 500,
+                    'message' => "No internet connection",
+                ],
+                'data' => null,
+            ];
+        }catch (\Exception $e) {
             return [
                 'success' => false,
                 'error' => [
