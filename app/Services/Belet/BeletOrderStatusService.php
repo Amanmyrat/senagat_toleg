@@ -18,11 +18,13 @@ class BeletOrderStatusService
 
     public function checkStatus(string $id): array
     {
+
         try {
             $response = Http::withHeaders([
                 'Authorization' => $this->authToken,
                 'Accept' => 'application/json',
-            ])->get($this->url.'/api/v2/orders/{$id}/status');
+            ])->get($this->url . '/api/v2/orders/' . $id . '/status');
+
 
             return $response->json();
 
