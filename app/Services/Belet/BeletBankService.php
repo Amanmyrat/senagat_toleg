@@ -24,7 +24,6 @@ class BeletBankService
         try {
             $response = Http::withHeaders([
                 'Authorization' => $this->authToken,
-
                 'Accept' => 'application/json',
             ])->get($this->url.'/api/v2/banks');
 
