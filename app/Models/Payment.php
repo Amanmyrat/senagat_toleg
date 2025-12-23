@@ -5,19 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BalanceOrder extends Model
+class Payment extends Model
 {
     use HasFactory;
 
-    protected $table = 'balance_orders';
-
-    protected $primaryKey = 'id';
-
     protected $fillable = [
         'user_id',
+        'type',
+        'user_information',
+        'payment_target',
         'bank_id',
         'amount',
-        'phone',
         'order_id',
         'pay_id',
         'status',
@@ -28,10 +26,9 @@ class BalanceOrder extends Model
     ];
 
     protected $casts = [
-        'amount' => 'decimal:2',
         'status' => 'string',
-        'user_id' => 'integer',
-        'bank_id' => 'integer',
+        'user_information' => 'array',
+        'payment_target'   => 'array',
         'error_code' => 'integer',
     ];
 

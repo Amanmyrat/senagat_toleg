@@ -2,7 +2,7 @@
 
 namespace App\Services\Belet;
 
-use App\Models\BalanceOrder;
+use App\Models\Payment;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -67,27 +67,38 @@ class BeletBalanceService
      */
     public function topUp(array $payload): array
     {
-        $order = BalanceOrder::create([
+        $order = Payment::create([
             'user_id'    => $payload['user_id'] ?? null,
             'bank_id'    => $payload['bank_id'],
+            'type' => 'topup',
             'amount'     => $payload['amount_in_manats'],
-            'phone'      => $payload['phone'],
-            'return_url' => $payload['returnUrl'],
-            'client_ip'  => $payload['client_ip'],
+            'payment_target' => [
+                'type'  => 'phone',
+                'value' => $payload['phone'],
+            ],
+            'return_url' => $payload['return_url'] ?? null,
+            'client_ip'  => $payload['client_ip'] ?? null,
             'status'     => 'pending',
         ]);
 
         Log::channel('belet')->info('Top-up request created', [
             'order_id' => $order->id,
-            'payload'  => $payload
+            'bank_id' => $payload['bank_id'],
+            'amount' => $payload['amount_in_manats'],
+            'payment_target' => $order->payment_target,
         ]);
+        $beletPayload = [
+            'bank_id' => $payload['bank_id'],
+            'amount_in_manats' => $payload['amount_in_manats'],
+            'phone' => $payload['phone'],
 
+        ];
         try {
             $response = Http::withHeaders([
                 'Authorization' => $this->authToken,
                 'Accept'        => 'application/json',
             ])
-                ->post($this->url . '/api/v2/balance/top-up', $payload)
+                ->post($this->url . '/api/v2/balance/top-up', $beletPayload)
                 ->throw()
                 ->json();
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
@@ -161,7 +172,7 @@ class BeletBalanceService
                 'data' => null,
             ];
         }
-        $order = BalanceOrder::where('order_id', $identifier)->first();
+        $order = Payment::where('order_id', $identifier)->first();
         if (! $order) {
             return [
                 'success' => false,
