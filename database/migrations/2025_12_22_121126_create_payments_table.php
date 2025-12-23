@@ -11,19 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('balance_orders', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('type');
+            $table->json('user_information')->nullable();
             $table->integer('bank_id');
-            $table->decimal('amount', 12, 2);
-            $table->string('phone');
+            $table->unsignedInteger('amount');
+            $table->json('payment_target')->nullable();
             $table->string('order_id')->unique()->nullable();
             $table->string('pay_id')->nullable()->unique();
             $table->enum('status', ['pending', 'confirmed', 'failed'])->default('pending');
             $table->integer('error_code')->nullable();
             $table->string('error_message')->nullable();
             $table->string('return_url')->nullable();
-            $table->ipAddress('client_ip');
+            $table->ipAddress('client_ip')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('balance_orders');
+        Schema::dropIfExists('payments');
     }
 };
