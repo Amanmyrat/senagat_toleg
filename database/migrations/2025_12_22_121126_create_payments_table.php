@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('return_url')->nullable();
             $table->ipAddress('client_ip')->nullable();
             $table->timestamps();
+
         });
     }
 

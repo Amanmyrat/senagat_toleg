@@ -93,6 +93,8 @@ class BeletBalanceService
             'phone' => $payload['phone'],
 
         ];
+        Log::channel('belet')->info('Top-up request created', [
+            'phone' => $payload['phone'],]);
         try {
             $response = Http::withHeaders([
                 'Authorization' => $this->authToken,
