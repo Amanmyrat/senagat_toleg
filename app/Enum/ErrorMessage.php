@@ -90,6 +90,7 @@ enum ErrorMessage: string
     // #2
 
     case BANK_ID_REQUIRED = 'bank_id_is_required.';
+    case BANK_NAME_REQUIRED = 'bank_name_required';
     case BANK_ID_INVALID = 'bank_id_must_be_a_valid_integer.';
     case AMOUNT_REQUIRED = 'amount_is_required.';
     case AMOUNT_INVALID = 'amount_must_be_a_numeric_value.';

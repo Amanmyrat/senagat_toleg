@@ -14,5 +14,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/orders/{id}/status', [BeletController::class, 'status']);
     });
     Route::post('/charity', [CharityController::class, 'store']);
+    Route::post('/check-status', [CharityController::class, 'checkStatus']);
 
 });

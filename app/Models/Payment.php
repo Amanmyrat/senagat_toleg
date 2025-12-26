@@ -23,6 +23,7 @@ class Payment extends Model
         'error_message',
         'return_url',
         'client_ip',
+        'bank_key'
     ];
 
     protected $casts = [
