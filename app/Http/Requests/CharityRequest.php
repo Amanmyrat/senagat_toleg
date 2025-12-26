@@ -24,13 +24,13 @@ class CharityRequest extends FormRequest
     {
         return [
             /**
-             * Bank Id.
+             * Bank name .
              *
              * @var int
              *
-             * @example 1
+             * @example rysgal
              */
-            'bank_id' => ['required', 'integer'],
+            'bank_name' => ['required', 'string'],
 
             /**
              * Name.
@@ -63,7 +63,7 @@ class CharityRequest extends FormRequest
              *
              * @example 35
              */
-            'amount' => ['required', 'integer', 'min:1'],
+            'amount' => ['required', 'numeric', 'min:1'],
 
         ];
     }
@@ -71,8 +71,7 @@ class CharityRequest extends FormRequest
     {
         return [
 
-            'bank_id.required' => ErrorMessage::BANK_ID_REQUIRED->value,
-            'bank_id.integer' => ErrorMessage::BANK_ID_INVALID->value,
+            'bank_name.required' => ErrorMessage::BANK_NAME_REQUIRED->value,
             'amount.required' => ErrorMessage::AMOUNT_REQUIRED->value,
             'amount.numeric' => ErrorMessage::AMOUNT_INVALID->value,
             'amount.min' => ErrorMessage::AMOUNT_MIN->value,
