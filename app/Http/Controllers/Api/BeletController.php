@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BalanceConfirmRequest;
 use App\Http\Requests\BeletBalanceTopUpRequest;
 use App\Http\Requests\BeletCheckPhoneRequest;
+use App\Http\Resources\BeletConfirmResource;
 use App\Services\Belet\BeletBalanceService;
 use App\Services\Belet\BeletBankService;
 use App\Services\Belet\BeletOrderStatusService;
@@ -94,12 +95,10 @@ class BeletController extends Controller
     public function confirm(
         BalanceConfirmRequest $request,
         BeletBalanceService $balanceService
-    ): JsonResponse {
+    ){
         $query = $request->only(['orderId',]);
-
-        return response()->json(
-            $balanceService->confirm($query)
-        );
+        $result = $balanceService->confirm($query);
+        return new BeletConfirmResource($result);
     }
     /**
      * Check User
