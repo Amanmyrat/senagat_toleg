@@ -249,6 +249,7 @@ class BeletBalanceService
                 'error' => $response['error'] ?? null,
             ]);
         }
+
         return $response;
     }
 

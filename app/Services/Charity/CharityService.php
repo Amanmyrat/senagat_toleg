@@ -3,8 +3,10 @@
 namespace App\Services\Charity;
 
 use App\Helpers\MoneyHelper;
+use App\Http\Resources\CharityStatusResource;
 use App\Models\Payment;
 use App\Services\Payments\PaymentGatewayResolver;
+use App\Support\Money;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use App\Services\BankResolverService;
@@ -97,7 +99,7 @@ class CharityService
      * Check payment status and update DB
      */
 
-    public function checkPaymentStatus(string $orderId): JsonResponse
+    public function checkPaymentStatus(string $orderId)
     {
         $payment = Payment::where('order_id', $orderId)->first();
         if (!$payment) {
@@ -117,9 +119,9 @@ class CharityService
         try {
             $gateway = $this->gatewayResolver->resolve($payment->bank_key);
             $response = $gateway->checkPaymentStatus($payment->order_id);
-
             $orderStatus  = $response['OrderStatus'] ?? null;
             $errorMessage = $response['ErrorMessage'] ?? null;
+            $amountDecimal =  Money::fromCents($response['Amount']);
             if ($orderStatus) {
                 $payment->update([
                     'status' => match ($orderStatus) {
@@ -134,15 +136,9 @@ class CharityService
                 'order_id' => $payment->order_id,
                 'bank_key' => $payment->bank_key,
                 'order_status' => $orderStatus,
+                'amount_decimal'=>$amountDecimal,
             ]);
-            return new JsonResponse( [
-                'success' => true,
-                'error' => null,
-                'data' => [
-                    'orderStatus'  => $orderStatus,
-                    'errorMessage' => $errorMessage,
-                ],
-            ]);
+            return  new CharityStatusResource($response);
         } catch (\Throwable $e) {
             Log::channel('charity')->error('Payment status check failed', [
                 'order_id' => $orderId,
