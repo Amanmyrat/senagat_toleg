@@ -15,10 +15,7 @@ class SenagatGateway implements PaymentGateway
         $this->config = config("payments.{$this->bankKey}");
     }
 
-//    protected function getBankKey(): string
-//    {
-//        return $this->config['key'] ?? 'senagat';
-//    }
+
     public function createPayment(array $payload): array
     {
         $formData =
@@ -74,7 +71,12 @@ class SenagatGateway implements PaymentGateway
 
         try {
             $response = Http::asForm()->post($this->config['base_url'] . $this->config['status_endpoint'], $formData)->json();
-
+            if (isset($response['ErrorCode']) && $response['ErrorCode'] != 0) {
+                return [
+                    'ErrorCode'    => (int) $response['ErrorCode'],
+                    'ErrorMessage' => $response['ErrorMessage'] ?? 'Unknown bank error',
+                ];
+            }
             return $response ?? [
                     'success' => false,
                     'data' => null,
