@@ -3,6 +3,7 @@
 namespace App\Services\Charity;
 
 use App\Helpers\MoneyHelper;
+use App\Http\Resources\CharityErrorResource;
 use App\Http\Resources\CharityStatusResource;
 use App\Models\Payment;
 use App\Services\Payments\PaymentGatewayResolver;
@@ -109,6 +110,7 @@ class CharityService
                 'data'    => null,
             ]);
         }
+
         if (!$payment->bank_key) {
             return new JsonResponse([
                 'success' => false,
@@ -119,19 +121,22 @@ class CharityService
         try {
             $gateway = $this->gatewayResolver->resolve($payment->bank_key);
             $response = $gateway->checkPaymentStatus($payment->order_id);
-            $orderStatus  = $response['OrderStatus'] ?? null;
+            $orderStatus  = isset($response['OrderStatus'])
+                ? (int) $response['OrderStatus']
+                : null;
+
             $errorMessage = $response['ErrorMessage'] ?? null;
             $amountDecimal =  Money::fromCents($response['Amount']);
-            if ($orderStatus) {
-                $payment->update([
-                    'status' => match ($orderStatus) {
-                        'APPROVED', 'CONFIRMED' => 'confirmed',
-                        'DECLINED', 'FAILED'    => 'failed',
-                        default                  => 'pending',
-                    },
-                    'error_message' => $errorMessage,
-                ]);
-            }
+            $mappedStatus = match ($orderStatus) {
+                2 => 'confirmed',
+                1 => 'pending',
+                0 => 'failed',
+                default => 'pending',
+            };
+            $payment->update([
+                'status' => $mappedStatus,
+                'error_message' => $errorMessage,
+            ]);
             Log::channel('charity')->info('Payment status checked', [
                 'order_id' => $payment->order_id,
                 'bank_key' => $payment->bank_key,
