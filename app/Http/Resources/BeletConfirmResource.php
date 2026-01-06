@@ -15,9 +15,13 @@ class BeletConfirmResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'success' => $this['success'] ?? false,
-            'data'   => $this['error'] ?? null,
-
+            'data' => [
+                'success' => (bool) ($this['success'] ?? false),
+                'error'   => $this['error'] ?? null,
+                'message' => $this['data']['message']
+                    ?? $this['data']['errorMessage']
+                    ?? null,
+            ],
         ];
     }
 }

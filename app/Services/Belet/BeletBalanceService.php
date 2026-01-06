@@ -161,96 +161,129 @@ class BeletBalanceService
     /**
      *  Balance Confirm
      */
+    /**
+     * Balance Confirm
+     */
     public function confirm(array $query): array
     {
         $identifier = $query['orderId'] ?? $query['pay_id'] ?? null;
+
         if (! $identifier) {
             return [
                 'success' => false,
                 'error' => [
                     'code' => 4,
-                    'message' => 'Invalid Query Params'
+                    'message' => 'Invalid Query Params',
                 ],
                 'data' => null,
             ];
         }
         $order = Payment::where('order_id', $identifier)->first();
+
         if (! $order) {
             return [
                 'success' => false,
                 'error' => [
                     'code' => 5,
-                    'message' => 'Payment_not_found'
+                    'message' => 'Payment not found',
                 ],
                 'data' => null,
             ];
         }
-
         if ($order->status === 'confirmed') {
             return [
-                'success' => false,
-                'error' => [
-                    'code' => 6,
-                    'message' => 'Payment already activated'
+                'success' => true,
+                'data' => [
+                    'status' => 'confirmed',
+                    'message' => 'Already confirmed',
                 ],
-                'data' => null,
             ];
         }
+        $order->update([
+            'status' => 'confirming',
+        ]);
 
         try {
-            $response = Http::withHeaders([
+            $bankResponse = Http::withHeaders([
                 'Authorization' => $this->authToken,
                 'Accept' => 'application/json',
-            ])->post($this->url . '/api/v2/balance/confirm?' . http_build_query($query))
-                ->throw()
-                ->json();
+            ])->post(
+                $this->url . '/api/v2/balance/confirm?' . http_build_query($query)
+            )->throw()->json();
+
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
+            $order->update([
+                'status' => 'failed',
+                'error_message' => 'No internet connection',
+            ]);
+
             return [
                 'success' => false,
                 'error' => [
                     'code' => 500,
-                    'message' => "No internet connection",
+                    'message' => 'No internet connection',
                 ],
                 'data' => null,
             ];
-        }catch (\Illuminate\Http\Client\RequestException $e) {
-            $response = $e->response->json() ?? [
-                    'success' => false,
-                    'error' => [
+
+        } catch (\Illuminate\Http\Client\RequestException $e) {
+
+            $response = $e->response->json() ?? [];
+
+            $order->update([
+                'status' => 'failed',
+                'error_code' => $response['data']['code'] ?? null,
+                'error_message' => $response['data']['message'] ?? null,
+            ]);
+
+            Log::channel('belet')->error('Top-up confirm failed', [
+                'order_id' => $order->order_id,
+                'response' => $response,
+            ]);
+
+            return [
+                'success' => false,
+                'error' => $response['data'] ?? [
                         'code' => 8,
-                        'message' => $e->getMessage()
+                        'message' => 'Confirm request failed',
                     ],
-                    'data' => null
-                ];
-            $order->update([
-                'status' => 'failed',
-                'error_code' => $response['error']['code'] ?? null,
-                'error_message' => $response['error']['message'] ?? null,
-            ]);
-
-            Log::channel('belet')->error('Top-up confirm failed', [
-                'order_id' => $order->order_id,
-                'error' => $response['error'] ?? null
-            ]);
-
-            return $response;
+                'data' => null,
+            ];
         }
-        if (($response['success'] ?? false) === true) {
-            $order->update(['status' => 'confirmed']);
-            Log::info('Top-up confirmed', ['order_id' => $order->order_id]);
-        } else {
-            $order->update([
-                'status' => 'failed',
-                'error_code' => $response['error']['code'] ?? null,
-                'error_message' => $response['error']['message'] ?? null,
-            ]);
-            Log::channel('belet')->error('Top-up confirm failed', [
-                'order_id' => $order->order_id,
-                'error' => $response['error'] ?? null,
-            ]);
-        }
+        if (($bankResponse['success'] ?? false) === true) {
 
-        return $response;
+            $order->update([
+                'status' => 'confirmed',
+                'error_code' => null,
+                'error_message' => null,
+            ]);
+
+            Log::info('Top-up confirmed', [
+                'order_id' => $order->order_id,
+            ]);
+
+            return [
+                'success' => true,
+                'data' => [
+                    'status' => 'confirmed',
+                    'message' => 'Balance top-up successful',
+                ],
+            ];
+        }
+        $order->update([
+            'status' => 'failed',
+            'error_code' => $bankResponse['data']['code'] ?? null,
+            'error_message' => $bankResponse['data']['message'] ?? null,
+        ]);
+
+        return [
+            'success' => false,
+            'error' => $bankResponse['data'] ?? [
+                    'code' => 9,
+                    'message' => 'Payment is not completed',
+                ],
+            'data' => null,
+        ];
     }
 
 }

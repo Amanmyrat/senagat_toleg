@@ -19,6 +19,7 @@ class CharityStatusResource extends JsonResource
             'success' => true,
             'data' => [
                 'orderStatus'  => $this['OrderStatus'] ?? null,
+                'errorCode'  => $this['ErrorCode'] ?? null,
                 'errorMessage' => $this['ErrorMessage'] ?? null,
                 'amount'       => Money::fromCents($this['Amount'] ?? null),
             ],
