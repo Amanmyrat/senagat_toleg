@@ -70,7 +70,7 @@ class BeletBalanceService
         $order = Payment::create([
             'user_id'    => $payload['user_id'] ?? null,
             'bank_id'    => $payload['bank_id'],
-            'type' => 'topup',
+            'type' => 'belet',
             'amount'     => $payload['amount_in_manats'],
             'payment_target' => [
                 'type'  => 'phone',

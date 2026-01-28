@@ -83,7 +83,17 @@ class SenagatGateway implements PaymentGateway
                     'error' => ['message' => 'Empty response from gateway'],
                 ];
 
-        } catch (\Throwable $e) {
+        } catch (\Illuminate\Http\Client\ConnectionException | \Illuminate\Http\Client\RequestException $e) {
+            return [
+                'success' => false,
+                'error' => [
+                    'code' => 503,
+                    'message' => 'No internet connection',
+                ],
+                'data' => null,
+            ];
+        }
+        catch (\Throwable $e) {
             return ['success' => false, 'data' => null, 'error' => ['message' => $e->getMessage()]];
         }
     }
