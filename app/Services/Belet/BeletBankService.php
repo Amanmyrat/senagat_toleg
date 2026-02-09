@@ -2,6 +2,7 @@
 
 namespace App\Services\Belet;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -38,7 +39,7 @@ class BeletBankService
             $response = Http::withHeaders([
                 'Authorization' => $this->authToken,
                 'Accept' => 'application/json',
-            ])->get($this->url . '/api/v2/banks');
+            ])->get($this->url.'/api/v2/banks');
 
             if ($response->successful()) {
                 $data = $response->json();
@@ -50,20 +51,18 @@ class BeletBankService
             return [
                 'success' => false,
                 'error' => $response->json('error') ?? [
-                        'code' => $response->status(),
-                        'message' => $response->body(),
-                    ],
+                    'code' => $response->status(),
+                    'message' => $response->body(),
+                ],
                 'data' => null,
             ];
-        }
-        catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             return [
                 'success' => false,
-                'error' => [ 'code' => 500,
-                'message' => "No internet connection",],
+                'error' => ['code' => 500,
+                    'message' => 'No internet connection', ],
                 'data' => null, ];
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return [
                 'success' => false,
                 'error' => [
@@ -75,6 +74,3 @@ class BeletBankService
         }
     }
 }
-
-
-

@@ -16,9 +16,10 @@ use Illuminate\Http\JsonResponse;
 class BeletController extends Controller
 {
     protected BeletBankService $banks;
-    protected BeletBalanceService $balances;
-    protected BeletOrderStatusService $status;
 
+    protected BeletBalanceService $balances;
+
+    protected BeletOrderStatusService $status;
 
     public function __construct(
         BeletBankService $banks,
@@ -60,23 +61,23 @@ class BeletController extends Controller
      *
      * @unauthenticated
      */
-//    public function topUp(
-//        BeletBalanceTopUpRequest $request,
-//        BeletBalanceService $balanceService
-//    ): JsonResponse {
-//        $payload = [
-//            'user_id' => $request->user()->id ?? null,
-//            'bank_id' => $request->bank_id,
-//            'amount_in_manats' => $request->amount_in_manats,
-//            'phone' => $request->phone,
-//            'returnUrl' => $request->returnUrl,
-//            'client_ip' => $request->ip(),
-//        ];
-//
-//        return response()->json(
-//            $balanceService->topUp($payload)
-//        );
-//    }
+    //    public function topUp(
+    //        BeletBalanceTopUpRequest $request,
+    //        BeletBalanceService $balanceService
+    //    ): JsonResponse {
+    //        $payload = [
+    //            'user_id' => $request->user()->id ?? null,
+    //            'bank_id' => $request->bank_id,
+    //            'amount_in_manats' => $request->amount_in_manats,
+    //            'phone' => $request->phone,
+    //            'returnUrl' => $request->returnUrl,
+    //            'client_ip' => $request->ip(),
+    //        ];
+    //
+    //        return response()->json(
+    //            $balanceService->topUp($payload)
+    //        );
+    //    }
     public function topUp(
         BeletBalanceTopUpRequest $request,
         BeletBalanceService $balanceService
@@ -87,6 +88,7 @@ class BeletController extends Controller
             )
         );
     }
+
     /**
      * Balance Confirm
      *
@@ -95,11 +97,13 @@ class BeletController extends Controller
     public function confirm(
         BalanceConfirmRequest $request,
         BeletBalanceService $balanceService
-    ){
-        $query = $request->only(['orderId',]);
+    ) {
+        $query = $request->only(['orderId']);
         $result = $balanceService->confirm($query);
+
         return new BeletConfirmResource($result);
     }
+
     /**
      * Check User
      *
@@ -117,10 +121,10 @@ class BeletController extends Controller
      *
      * @unauthenticated
      */
-    public function status(string $id): JsonResponse
-    {
-        $response = $this->status->checkStatus($id);
-
-        return new JsonResponse($response);
-    }
+    //    public function status(string $id): JsonResponse
+    //    {
+    //        $response = $this->status->checkStatus($id);
+    //
+    //        return new JsonResponse($response);
+    //    }
 }

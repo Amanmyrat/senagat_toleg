@@ -3,14 +3,13 @@
 namespace App\Services\Charity;
 
 use App\Helpers\MoneyHelper;
-use App\Http\Resources\CharityErrorResource;
 use App\Http\Resources\CharityStatusResource;
 use App\Models\Payment;
+use App\Services\BankResolverService;
 use App\Services\Payments\PaymentGatewayResolver;
 use App\Support\Money;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use App\Services\BankResolverService;
 
 class CharityService
 {
@@ -23,18 +22,18 @@ class CharityService
     {
         $bankId = $this->bankResolver->resolveIdByName($payload['bank_name']);
 
-        if (!$bankId) {
+        if (! $bankId) {
             return $this->error(16, 'Invalid bank');
         }
         $orderId = $payload['order_id'] ?? $this->generateUniqueOrderId();
         $amountInt = MoneyHelper::decimalToInt($payload['amount']);
         $bankKey = strtolower($payload['bank_name']);
-        $payment = Payment::create([
+        $payment = Payment::query()->create([
             'user_id' => $payload['user_id'] ?? null,
             'type' => 'charity',
             'bank_id' => $bankId,
             'bank_key' => $bankKey,
-            'amount' =>  $amountInt,
+            'amount' => $amountInt,
             'user_information' => [
                 'name' => $payload['name'],
                 'surname' => $payload['surname'],
@@ -47,7 +46,6 @@ class CharityService
             'status' => 'pending',
         ]);
 
-
         try {
             $gateway = $this->gatewayResolver->resolve($payload['bank_name']);
             $response = $gateway->createPayment([
@@ -56,7 +54,7 @@ class CharityService
                 'description' => $payload['description'] ?? null,
             ]);
 
-            if (!empty($response['error'])) {
+            if (! empty($response['error'])) {
                 throw new \Exception($response['error']['message']);
             }
 
@@ -70,10 +68,10 @@ class CharityService
                 'bank' => $payload['bank_name'],
                 'bank_key' => $bankKey,
                 'amount_tyiyn' => $payment->amount,
-                'amount_decimal'=>  MoneyHelper::intToDecimal($payment->amount),
-                'pay_id'=>$payment->pay_id,
+                'amount_decimal' => MoneyHelper::intToDecimal($payment->amount),
+                'pay_id' => $payment->pay_id,
                 'gateway_response' => [
-                    'orderId' => $response['orderId']?? null,
+                    'orderId' => $response['orderId'] ?? null,
                 ],
             ]);
 
@@ -100,72 +98,71 @@ class CharityService
      * Check payment status and update DB
      */
 
-    public function checkPaymentStatus(string $orderId)
-    {
-        $payment = Payment::where('order_id', $orderId)->first();
-        if (!$payment) {
-            return new JsonResponse([
-                'success' => false,
-                'error'   => ['code' => 404, 'message' => 'Payment not found'],
-                'data'    => null,
-            ]);
-        }
-
-        if (!$payment->bank_key) {
-            return new JsonResponse([
-                'success' => false,
-                'error' => ['code' => 422, 'message' => 'Payment bank_key is missing'],
-                'data' => null,
-            ]);
-        }
-        try {
-            $gateway = $this->gatewayResolver->resolve($payment->bank_key);
-            $response = $gateway->checkPaymentStatus($payment->order_id);
-            $orderStatus  = isset($response['OrderStatus'])
-                ? (int) $response['OrderStatus']
-                : null;
-
-            $errorMessage = $response['ErrorMessage'] ?? null;
-            $amountDecimal =  Money::fromCents($response['Amount']);
-            $mappedStatus = match ($orderStatus) {
-                2 => 'confirmed',
-                1 => 'pending',
-                0 => 'failed',
-                default => 'pending',
-            };
-            $payment->update([
-                'status' => $mappedStatus,
-                'error_message' => $errorMessage,
-            ]);
-            Log::channel('charity')->info('Payment status checked', [
-                'order_id' => $payment->order_id,
-                'bank_key' => $payment->bank_key,
-                'order_status' => $orderStatus,
-                'amount_decimal'=>$amountDecimal,
-            ]);
-            return  new CharityStatusResource($response);
-        } catch (\Throwable $e) {
-            Log::channel('charity')->error('Payment status check failed', [
-                'order_id' => $orderId,
-                'error' => $e->getMessage(),
-            ]);
-
-            return new JsonResponse( [
-                'success' => false,
-                'error' => [
-                    'code' => 500,
-                    'message' => 'Payment status check failed',
-                ],
-                'data' => null,
-            ]);
-        }
-    }
-
+    //    public function checkPaymentStatus(string $orderId)
+    //    {
+    //        $payment = Payment::where('order_id', $orderId)->first();
+    //        if (!$payment) {
+    //            return new JsonResponse([
+    //                'success' => false,
+    //                'error'   => ['code' => 404, 'message' => 'Payment not found'],
+    //                'data'    => null,
+    //            ]);
+    //        }
+    //
+    //        if (!$payment->bank_key) {
+    //            return new JsonResponse([
+    //                'success' => false,
+    //                'error' => ['code' => 422, 'message' => 'Payment bank_key is missing'],
+    //                'data' => null,
+    //            ]);
+    //        }
+    //        try {
+    //            $gateway = $this->gatewayResolver->resolve($payment->bank_key);
+    //            $response = $gateway->checkPaymentStatus($payment->order_id);
+    //            $orderStatus  = isset($response['OrderStatus'])
+    //                ? (int) $response['OrderStatus']
+    //                : null;
+    //
+    //            $errorMessage = $response['ErrorMessage'] ?? null;
+    //            $amountDecimal =  Money::fromCents($response['Amount']);
+    //            $mappedStatus = match ($orderStatus) {
+    //                2 => 'confirmed',
+    //                1 => 'pending',
+    //                0 => 'failed',
+    //                default => 'pending',
+    //            };
+    //            $payment->update([
+    //                'status' => $mappedStatus,
+    //                'error_message' => $errorMessage,
+    //            ]);
+    //            Log::channel('charity')->info('Payment status checked', [
+    //                'order_id' => $payment->order_id,
+    //                'bank_key' => $payment->bank_key,
+    //                'order_status' => $orderStatus,
+    //                'amount_decimal'=>$amountDecimal,
+    //            ]);
+    //            return  new CharityStatusResource($response);
+    //        } catch (\Throwable $e) {
+    //            Log::channel('charity')->error('Payment status check failed', [
+    //                'order_id' => $orderId,
+    //                'error' => $e->getMessage(),
+    //            ]);
+    //
+    //            return new JsonResponse( [
+    //                'success' => false,
+    //                'error' => [
+    //                    'code' => 500,
+    //                    'message' => 'Payment status check failed',
+    //                ],
+    //                'data' => null,
+    //            ]);
+    //        }
+    //    }
 
     protected function generateUniqueOrderId(): string
     {
         do {
-            $orderId = 'SB' . now()->format('YmdH') . rand(1000, 9999);
+            $orderId = 'SB'.now()->format('YmdH').rand(1000, 9999);
         } while (Payment::where('order_id', $orderId)->exists());
 
         return $orderId;

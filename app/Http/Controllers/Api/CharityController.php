@@ -8,7 +8,6 @@ use App\Http\Requests\CheckPaymentStatusRequest;
 use App\Services\Charity\CharityService;
 use App\Services\Payments\PaymentGatewayResolver;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class CharityController extends Controller
 {
@@ -18,6 +17,7 @@ class CharityController extends Controller
      * @unauthenticated
      */
     protected CharityService $charityService;
+
     protected PaymentGatewayResolver $gatewayResolver;
 
     public function __construct(CharityService $charityService, PaymentGatewayResolver $gatewayResolver)
@@ -25,11 +25,12 @@ class CharityController extends Controller
         $this->charityService = $charityService;
         $this->gatewayResolver = $gatewayResolver;
     }
+
     /**
      * Send Charity payment
-     *
      */
-    public function store(CharityRequest $request): JsonResponse {
+    public function store(CharityRequest $request): JsonResponse
+    {
         $payload = $request->validated();
         $response = $this->charityService->create($payload);
 
@@ -41,11 +42,11 @@ class CharityController extends Controller
      *
      * @unauthenticated
      */
-    public function checkStatus(CheckPaymentStatusRequest $request): JsonResponse
-    {
-        $orderId = $request->validated()['orderId'];
-        $response = $this->charityService->checkPaymentStatus($orderId);
-
-        return response()->json($response);
-    }
+    //    public function checkStatus(CheckPaymentStatusRequest $request): JsonResponse
+    //    {
+    //        $orderId = $request->validated()['orderId'];
+    //        $response = $this->charityService->checkPaymentStatus($orderId);
+    //
+    //        return response()->json($response);
+    //    }
 }

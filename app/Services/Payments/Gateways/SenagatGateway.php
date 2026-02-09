@@ -15,7 +15,6 @@ class SenagatGateway implements PaymentGateway
         $this->config = config("payments.{$this->bankKey}");
     }
 
-
     public function createPayment(array $payload): array
     {
         $formData =
@@ -23,7 +22,7 @@ class SenagatGateway implements PaymentGateway
                 'userName' => $this->config['userName'],
                 'password' => $this->config['password'],
                 'orderNumber' => $payload['order_number'],
-                'amount' => $payload['amount'] ,
+                'amount' => $payload['amount'],
                 'currency' => $this->config['currency'],
                 'returnUrl' => $this->config['return_url'],
                 'description' => $payload['description'] ?? 'Charity payment',
@@ -34,19 +33,20 @@ class SenagatGateway implements PaymentGateway
 
         try {
             $response = Http::asForm()
-                ->post($this->config['base_url'] . $this->config['pay_endpoint'], $formData);
+                ->post($this->config['base_url'].$this->config['pay_endpoint'], $formData);
 
             Log::info('Gateway resolve', [
                 'bankKey' => $bankKey ?? null,
             ]);
+
             return $response->json() ?? [
-                    'success' => false,
-                    'error' => [
-                        'code' => $response->status(),
-                        'message' => $response->body(),
-                    ],
-                    'data' => null,
-                ];
+                'success' => false,
+                'error' => [
+                    'code' => $response->status(),
+                    'message' => $response->body(),
+                ],
+                'data' => null,
+            ];
 
         } catch (\Throwable $e) {
             return [
@@ -60,30 +60,31 @@ class SenagatGateway implements PaymentGateway
         }
     }
 
-        public function checkPaymentStatus(string $orderId): array
+    public function checkPaymentStatus(string $orderId): array
     {
 
         $formData = [
             'userName' => $this->config['userName'],
             'password' => $this->config['password'],
-            'orderId'  => $orderId,
+            'orderId' => $orderId,
         ];
 
         try {
-            $response = Http::asForm()->post($this->config['base_url'] . $this->config['status_endpoint'], $formData)->json();
+            $response = Http::asForm()->post($this->config['base_url'].$this->config['status_endpoint'], $formData)->json();
             if (isset($response['ErrorCode']) && $response['ErrorCode'] != 0) {
                 return [
-                    'ErrorCode'    => (int) $response['ErrorCode'],
+                    'ErrorCode' => (int) $response['ErrorCode'],
                     'ErrorMessage' => $response['ErrorMessage'] ?? 'Unknown bank error',
                 ];
             }
-            return $response ?? [
-                    'success' => false,
-                    'data' => null,
-                    'error' => ['message' => 'Empty response from gateway'],
-                ];
 
-        } catch (\Illuminate\Http\Client\ConnectionException | \Illuminate\Http\Client\RequestException $e) {
+            return $response ?? [
+                'success' => false,
+                'data' => null,
+                'error' => ['message' => 'Empty response from gateway'],
+            ];
+
+        } catch (\Illuminate\Http\Client\ConnectionException|\Illuminate\Http\Client\RequestException $e) {
             return [
                 'success' => false,
                 'error' => [
@@ -92,10 +93,8 @@ class SenagatGateway implements PaymentGateway
                 ],
                 'data' => null,
             ];
-        }
-        catch (\Throwable $e) {
+        } catch (\Throwable $e) {
             return ['success' => false, 'data' => null, 'error' => ['message' => $e->getMessage()]];
         }
     }
-
 }
