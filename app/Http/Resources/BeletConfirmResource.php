@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class BeletConfirmResource extends JsonResource
@@ -17,7 +16,7 @@ class BeletConfirmResource extends JsonResource
         return [
             'data' => [
                 'success' => (bool) ($this['success'] ?? false),
-                'error'   => $this['error'] ?? null,
+                'error' => $this['error'] ?? null,
                 'message' => $this['data']['message']
                     ?? $this['data']['errorMessage']
                     ?? null,

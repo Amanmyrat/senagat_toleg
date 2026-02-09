@@ -2,6 +2,7 @@
 
 namespace App\Services\Belet;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 class BeletUserService
@@ -51,12 +52,12 @@ class BeletUserService
                 'data' => null,
             ];
 
-        }catch (\Illuminate\Http\Client\ConnectionException $e) {
+        } catch (ConnectionException $e) {
             return [
                 'success' => false,
                 'error' => [
                     'code' => 500,
-                    'message' => "No internet connection",
+                    'message' => 'No internet connection',
                 ],
                 'data' => null,
             ];

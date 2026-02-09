@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\BeletController;
 use App\Http\Controllers\Api\CharityController;
-use App\Http\Controllers\Api\PaymentStatusController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -12,10 +11,10 @@ Route::prefix('v1')->group(function () {
         Route::post('top-up', [BeletController::class, 'topUp']);
         Route::post('confirm', [BeletController::class, 'confirm']);
         Route::post('/check-phone', [BeletController::class, 'checkPhone']);
-        Route::get('/orders/{id}/status', [BeletController::class, 'status']);
+        //        Route::get('/orders/{id}/status', [BeletController::class, 'status']);
     });
     Route::post('/charity', [CharityController::class, 'store']);
-    Route::post('/check-status', [CharityController::class, 'checkStatus']);
-    Route::get('payments/status/{orderId}', [PaymentStatusController::class, 'checkStatus']);
+    //    Route::post('/check-status', [CharityController::class, 'checkStatus']);
+    //    Route::get('payments/status/{orderId}', [PaymentStatusController::class, 'checkStatus']);
 
 });

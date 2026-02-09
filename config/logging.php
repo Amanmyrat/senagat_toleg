@@ -128,7 +128,7 @@ return [
             'path' => storage_path('logs/belet/belet.log'),
             'level' => 'info',
             'days' => 60,
-            ],
+        ],
         'charity' => [
             'driver' => 'daily',
             'path' => storage_path('logs/charity/charity.log'),

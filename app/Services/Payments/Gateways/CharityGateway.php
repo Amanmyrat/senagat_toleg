@@ -5,9 +5,9 @@ namespace App\Services\Payments\Gateways;
 use App\Models\Payment;
 use App\Services\Payments\Contracts\PaymentStatusGatewayInterface;
 use App\Services\Payments\PaymentGatewayResolver;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Log;
 
 class CharityGateway implements PaymentStatusGatewayInterface
 {
@@ -22,19 +22,19 @@ class CharityGateway implements PaymentStatusGatewayInterface
     {
         $payment = Payment::where('order_id', $orderId)->first();
 
-        if (!$payment) {
+        if (! $payment) {
             return [
                 'success' => false,
-                'error'   => ['code' => 404, 'message' => 'Payment not found'],
-                'data'    => null,
+                'error' => ['code' => 404, 'message' => 'Payment not found'],
+                'data' => null,
             ];
         }
 
-        if (!$payment->bank_key) {
+        if (! $payment->bank_key) {
             return [
                 'success' => false,
-                'error'   => ['code' => 422, 'message' => 'Payment bank_key is missing'],
-                'data'    => null,
+                'error' => ['code' => 422, 'message' => 'Payment bank_key is missing'],
+                'data' => null,
             ];
         }
 
@@ -45,15 +45,15 @@ class CharityGateway implements PaymentStatusGatewayInterface
             if (isset($response['success']) && $response['success'] === false) {
                 return [
                     'success' => false,
-                    'error'   => $response['error'] ?? ['code' => 500, 'message' => 'Unknown error'],
-                    'data'    => null,
+                    'error' => $response['error'] ?? ['code' => 500, 'message' => 'Unknown error'],
+                    'data' => null,
                 ];
             }
 
-            $orderStatus   = $response['OrderStatus'] ?? null;
-            $errorCode     = $response['ErrorCode'] ?? null;
-            $errorMessage  = $response['ErrorMessage'] ?? null;
-            $amount        = $response['Amount'] ?? null;
+            $orderStatus = $response['OrderStatus'] ?? null;
+            $errorCode = $response['ErrorCode'] ?? null;
+            $errorMessage = $response['ErrorMessage'] ?? null;
+            $amount = $response['Amount'] ?? null;
 
             $mappedStatus = match ($orderStatus) {
                 2 => 'confirmed',
@@ -84,11 +84,11 @@ class CharityGateway implements PaymentStatusGatewayInterface
                 ],
             ];
 
-        } catch (ConnectionException | RequestException $e) {
+        } catch (ConnectionException|RequestException $e) {
             // Ağ hatası, DNS hatası veya Timeout durumları buraya düşer
             Log::channel('charity')->warning('Network error during payment check', [
                 'order_id' => $orderId,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return [

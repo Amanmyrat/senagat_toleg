@@ -21,7 +21,7 @@ return new class extends Migration
             $table->json('payment_target')->nullable();
             $table->string('order_id')->unique()->nullable();
             $table->string('pay_id')->nullable()->unique();
-            $table->enum('status', ['pending', 'confirmed', 'failed','confirming'])->default('pending');
+            $table->enum('status', ['pending', 'confirmed', 'failed', 'confirming'])->default('pending');
             $table->integer('error_code')->nullable();
             $table->string('error_message')->nullable();
             $table->string('return_url')->nullable();

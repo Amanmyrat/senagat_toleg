@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Support;
 
 class Money
@@ -12,18 +11,19 @@ class Money
 
     public static function toCents(float $amount): int
     {
-        return (int)round($amount * 100);
+        return (int) round($amount * 100);
     }
+
     public static function formatFromCents(
         int $cents,
         int $decimals = 2,
         string $currency = ' TMT'
     ): string {
         return number_format(
-                $cents / 100,
-                $decimals,
-                ',',
-                '.'
-            ) . " {$currency}";
+            $cents / 100,
+            $decimals,
+            ',',
+            '.'
+        )." {$currency}";
     }
 }
