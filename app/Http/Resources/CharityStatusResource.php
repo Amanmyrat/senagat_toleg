@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use App\Support\Money;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class CharityStatusResource extends JsonResource
@@ -18,10 +17,10 @@ class CharityStatusResource extends JsonResource
         return [
             'success' => true,
             'data' => [
-                'orderStatus'  => $this['OrderStatus'] ?? null,
-                'errorCode'  => $this['ErrorCode'] ?? null,
+                'orderStatus' => $this['OrderStatus'] ?? null,
+                'errorCode' => $this['ErrorCode'] ?? null,
                 'errorMessage' => $this['ErrorMessage'] ?? null,
-                'amount'       => Money::fromCents($this['Amount'] ?? null),
+                'amount' => Money::fromCents($this['Amount'] ?? null),
             ],
         ];
     }

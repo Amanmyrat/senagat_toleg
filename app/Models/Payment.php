@@ -23,13 +23,13 @@ class Payment extends Model
         'error_message',
         'return_url',
         'client_ip',
-        'bank_key'
+        'bank_key',
     ];
 
     protected $casts = [
         'status' => 'string',
         'user_information' => 'array',
-        'payment_target'   => 'array',
+        'payment_target' => 'array',
         'error_code' => 'integer',
     ];
 

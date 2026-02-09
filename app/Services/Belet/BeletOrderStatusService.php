@@ -2,6 +2,7 @@
 
 namespace App\Services\Belet;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 
 class BeletOrderStatusService
@@ -23,22 +24,20 @@ class BeletOrderStatusService
             $response = Http::withHeaders([
                 'Authorization' => $this->authToken,
                 'Accept' => 'application/json',
-            ])->get($this->url . '/api/v2/orders/' . $id . '/status');
-
+            ])->get($this->url.'/api/v2/orders/'.$id.'/status');
 
             return $response->json();
 
-        } catch (\Illuminate\Http\Client\ConnectionException $e) {
-             return [
+        } catch (ConnectionException $e) {
+            return [
                 'success' => false,
                 'error' => [
                     'code' => 500,
-                    'message' => "No internet connection",
+                    'message' => 'No internet connection',
                 ],
                 'data' => null,
             ];
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return [
                 'success' => false,
                 'error' => [

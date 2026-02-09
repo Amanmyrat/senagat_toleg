@@ -12,7 +12,7 @@ class PaymentReturnController extends Controller
     {
         $orderId = $request->get('orderId');
 
-        if (!$orderId) {
+        if (! $orderId) {
             return response()->json([
                 'success' => false,
                 'message' => 'OrderId missing',
