@@ -34,5 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'telecom' => [
+        'url' => env('TELECOM_BILLING_URL'),
+        'secret' => env('TELECOM_BILLING_SECRET'),
+    ],
 
 ];

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\BeletController;
 use App\Http\Controllers\Api\CharityController;
+use App\Http\Controllers\Api\TelecomPaymentController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -17,4 +18,5 @@ Route::prefix('v1')->group(function () {
     //    Route::post('/check-status', [CharityController::class, 'checkStatus']);
     //    Route::get('payments/status/{orderId}', [PaymentStatusController::class, 'checkStatus']);
 
+    Route::get('/telecom/payment', [TelecomPaymentController::class, 'handle']);
 });
