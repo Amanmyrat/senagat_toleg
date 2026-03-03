@@ -29,7 +29,7 @@ class IpCheck
                 'success' => false,
                 'error' => [
                     'code' => 403,
-                    'message' => 'Your IP is not allowed',
+                    'message' => 'Your IP is not allowed' . $clientIp,
                 ],
                 'data' => null,
             ], 403);
