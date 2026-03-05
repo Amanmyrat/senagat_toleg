@@ -24,6 +24,8 @@ class Payment extends Model
         'return_url',
         'client_ip',
         'bank_key',
+        'telecom_txn_id',
+        'telecom_result',
     ];
 
     protected $casts = [

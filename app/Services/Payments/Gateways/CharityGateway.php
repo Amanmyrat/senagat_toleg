@@ -85,7 +85,6 @@ class CharityGateway implements PaymentStatusGatewayInterface
             ];
 
         } catch (ConnectionException|RequestException $e) {
-            // Ağ hatası, DNS hatası veya Timeout durumları buraya düşer
             Log::channel('charity')->warning('Network error during payment check', [
                 'order_id' => $orderId,
                 'error' => $e->getMessage(),
