@@ -18,22 +18,11 @@ class TelecomPaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            /**
-             * Command
-             *
-             * @var string
-             *
-             * @example 1
-             */
-            'command'  => 'required|in:check,pay',
-
-            'txn_id'   => 'required|string|max:20',
 
             'account'  => 'required|string|max:200',
 
             'amount'   => 'required|numeric|min:0.01',
 
-            'txn_date' => 'nullable|string',
         ];
     }
 }

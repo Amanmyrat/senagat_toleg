@@ -47,7 +47,7 @@ class CharityService
         ]);
 
         try {
-            $gateway = $this->gatewayResolver->resolve($payload['bank_name']);
+            $gateway = $this->gatewayResolver->resolve($payload['bank_name'],'charity');
             $response = $gateway->createPayment([
                 'order_number' => $payment->pay_id,
                 'amount' => $payment->amount,
