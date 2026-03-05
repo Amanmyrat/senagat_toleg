@@ -135,7 +135,12 @@ return [
             'level' => 'info',
             'days' => 60,
         ],
-
+        'telecom' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/telecom/telecom.log'),
+            'level' => 'info',
+            'days' => 60,
+        ],
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],

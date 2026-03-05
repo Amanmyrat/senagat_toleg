@@ -4,34 +4,33 @@ namespace App\Http\Controllers\Api;
 
 use App\Helpers\TxnIdGenerator;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Telecom\TelecomPaymentRequest;
-use App\Http\Resources\TelecomPayResource;
+use App\Http\Requests\Telecom\TelecomBalanceRequest;
+use App\Http\Resources\TelecomBalanceResource;
 use App\Services\Telecom\TelecomPaymentService;
 use Illuminate\Http\Request;
 
-class TelecomPaymentController extends Controller
+class TelecomBalanceController extends Controller
 {
     /**
-     * Telecom payment
+     * Telecom balance
      *
      * @unauthenticated
      */
     public function handle(
-        TelecomPaymentRequest $request,
+        TelecomBalanceRequest $request,
         TelecomPaymentService $service
-    ) {
+    )
+    {
         $txnId = TxnIdGenerator::generate();
-        $txnDate = now()->format('YmdHis');
-        $result = $service->pay(
+
+        $result = $service->checkBalance(
             $request->validated(),
-            $txnId,
-            $txnDate
+            $txnId
         );
 
-        return new TelecomPayResource(
+        return new TelecomBalanceResource(
             array_merge($result, [
                 'txn_id' => $txnId,
-                'txn_date' => $txnDate,
             ])
         );
     }

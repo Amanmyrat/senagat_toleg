@@ -9,22 +9,28 @@ use Illuminate\Support\Facades\Log;
 class SenagatGateway implements PaymentGateway
 {
     protected array $config;
+    protected array $credentials;
 
-    public function __construct(protected string $bankKey)
+    public function __construct(protected string $bankKey,protected string $service)
     {
         $this->config = config("payments.{$this->bankKey}");
+       $this->credentials = $this->config[$this->service];
+
     }
 
     public function createPayment(array $payload): array
     {
         $formData =
             [
-                'userName' => $this->config['userName'],
-                'password' => $this->config['password'],
+               'userName' => $this->credentials['userName'],
+                'password' => $this->credentials['password'],
+  //              'userName' => $this->config['userName'],
+   //             'password' => $this->config['password'],
                 'orderNumber' => $payload['order_number'],
                 'amount' => $payload['amount'],
                 'currency' => $this->config['currency'],
-                'returnUrl' => $this->config['return_url'],
+           //     'returnUrl' => $this->config['return_url'],
+                'returnUrl' => $this->credentials['return_url'],
                 'description' => $payload['description'] ?? 'Charity payment',
             ];
         if ($this->bankKey === 'senagat') {
@@ -49,6 +55,7 @@ class SenagatGateway implements PaymentGateway
             ];
 
         } catch (\Throwable $e) {
+
             return [
                 'success' => false,
                 'error' => [
@@ -64,8 +71,10 @@ class SenagatGateway implements PaymentGateway
     {
 
         $formData = [
-            'userName' => $this->config['userName'],
-            'password' => $this->config['password'],
+//            'userName' => $this->config['userName'],
+//            'password' => $this->config['password'],
+            'userName' => $this->credentials['userName'],
+            'password' => $this->credentials['password'],
             'orderId' => $orderId,
         ];
 
