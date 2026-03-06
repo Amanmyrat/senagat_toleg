@@ -20,8 +20,6 @@ class TelecomStatusJob implements ShouldQueue
 
 
     public int $tries = 10;
-
-
     public int $backoff = 10;
 
     public function __construct(
@@ -32,6 +30,7 @@ class TelecomStatusJob implements ShouldQueue
         PaymentGatewayResolver $gatewayResolver,
         TelecomPaymentService $telecomService
     ): void {
+        $payment = $this->payment->fresh();
         $gateway = $gatewayResolver->resolve(
             $this->payment->bank_key,
             'telecom'
@@ -73,11 +72,17 @@ class TelecomStatusJob implements ShouldQueue
             return;
         }
 
-        $txnId = $this->payment->telecom_txn_id ?? TxnIdGenerator::generate();
+        $extras = $this->payment->extras ?? [];
+        $txnId = $extras['telecom_txn_id'] ?? TxnIdGenerator::generate();
+        if (!isset($extras['telecom_txn_id'])) {
 
-        if (! $this->payment->telecom_txn_id) {
-            $this->payment->update(['telecom_txn_id' => $txnId]);
-            $this->payment->refresh();
+            $extras['telecom_txn_id'] = $txnId;
+
+            $payment->update([
+                'extras' => $extras
+            ]);
+
+            $payment->refresh();
         }
 
         $txnDate         = now()->format('YmdHis');
@@ -97,9 +102,10 @@ class TelecomStatusJob implements ShouldQueue
         ]);
 
         if (in_array($result, [0, 8])) {
+            $extras['telecom_result'] = $result;
             $this->payment->update([
                 'status'         => 'confirmed',
-                'telecom_result' => $result,
+                'extras' => $extras
             ]);
 
             Log::channel('telecom')->info('Telecom payment completed', [
@@ -112,9 +118,11 @@ class TelecomStatusJob implements ShouldQueue
         }
 
         if ($this->attempts() >= $this->tries) {
+            $extras['telecom_result'] = $result;
+
             $this->payment->update([
                 'status'         => 'failed',
-                'telecom_result' => $result,
+                'extras' => $extras
             ]);
 
             Log::channel('telecom')->error('Telecom payment max attempts reached', [
@@ -129,6 +137,7 @@ class TelecomStatusJob implements ShouldQueue
         Log::channel('telecom')->warning('Telecom payment failed, will retry', [
             'payment_id' => $this->payment->id,
             'result'     => $result,
+            'txn_id'     => $txnId,
             'comment'    => $telecomResponse['comment'] ?? '',
             'attempt'    => $this->attempts(),
         ]);

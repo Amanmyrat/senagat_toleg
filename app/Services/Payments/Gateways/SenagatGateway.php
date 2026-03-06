@@ -11,10 +11,20 @@ class SenagatGateway implements PaymentGateway
     protected array $config;
     protected array $credentials;
 
-    public function __construct(protected string $bankKey,protected string $service)
+
+    public function __construct(
+        protected string $bankKey,
+        protected string $service,
+        protected ?string $type = null
+    )
     {
         $this->config = config("payments.{$this->bankKey}");
-       $this->credentials = $this->config[$this->service];
+
+        if ($this->service === 'astu') {
+            $this->credentials = $this->config['astu'][$this->type];
+        } else {
+            $this->credentials = $this->config[$this->service];
+        }
 
     }
 

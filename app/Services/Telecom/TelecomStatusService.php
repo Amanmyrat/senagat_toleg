@@ -35,8 +35,8 @@ class TelecomStatusService
                 'bank'    => $response,
                 'payment' => [
                     'status'         => $payment->status,
-                    'telecom_result' => $payment->telecom_result,
-                    'telecom_txn_id' => $payment->telecom_txn_id,
+                    'telecom_result' => $payment->extras['telecom_result'] ?? null,
+                    'telecom_txn_id' => $payment->extras['telecom_txn_id'] ?? null,
                 ],
             ],
         ];
