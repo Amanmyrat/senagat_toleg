@@ -32,7 +32,6 @@ class TelecomClient
         return md5(
             $params['command'] . ';' .
             $params['account'] . ';' .
-            $params['txn_id'] . ';' .
             config('services.telecom.secret')
         );
     }

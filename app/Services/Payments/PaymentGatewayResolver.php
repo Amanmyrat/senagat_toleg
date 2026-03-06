@@ -9,20 +9,23 @@ use InvalidArgumentException;
 class PaymentGatewayResolver
 {
 
-    public function resolve(string $bankName, string $service): PaymentGateway
+    public function resolve(string $bankName, string $service,?string $type = null): PaymentGateway
     {
         return match ($bankName) {
             'senagat' => app(SenagatGateway::class, [
                 'bankKey' => 'senagat',
                 'service' => $service,
+                'type' => $type
             ]),
             'altyn_asyr' => app(SenagatGateway::class, [
                 'bankKey' => 'altyn_asyr',
                 'service' => $service,
+                'type' => $type
             ]),
             'rysgal' => app(SenagatGateway::class, [
                 'bankKey' => 'rysgal',
                 'service' => $service,
+                'type' => $type
             ]),
             default => throw new \InvalidArgumentException("Unsupported bank"),
         };

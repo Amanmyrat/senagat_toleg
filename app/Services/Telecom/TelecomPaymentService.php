@@ -53,19 +53,4 @@ class TelecomPaymentService
     }
 }
 
-//public function forward(array $params)
-//{
-//    $params['curr'] = 934;
-//
-//    $params['sum'] = MoneyHelper::decimalToInt($params['amount']);
-//
-//    unset($params['amount']);
-//
-//    $response = $this->client->send($params);
-//
-//    return response(
-//        $response->body(),
-//        $response->status(),
-//        ['Content-Type' => 'application/xml']
-//    );
-//}
+
