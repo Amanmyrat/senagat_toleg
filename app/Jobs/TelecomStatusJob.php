@@ -19,7 +19,7 @@ class TelecomStatusJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
 
-    public int $tries = 10;
+    public int $tries = 20;
     public int $backoff = 10;
 
     public function __construct(
@@ -88,7 +88,10 @@ class TelecomStatusJob implements ShouldQueue
         $txnDate         = now()->format('YmdHis');
         $telecomResponse = $telecomService->pay([
             'account' => $this->payment->payment_target['value'],
-            'amount'  => MoneyHelper::intToDecimal($this->payment->amount),
+            'amount'  => number_format(
+                MoneyHelper::intToDecimal($payment->amount),
+                2, '.', ''
+            ),
         ], $txnId, $txnDate);
 
         $result = (int) ($telecomResponse['result'] ?? -1);
@@ -142,6 +145,6 @@ class TelecomStatusJob implements ShouldQueue
             'attempt'    => $this->attempts(),
         ]);
 
-        $this->release(30);
+        $this->release(10);
     }
 }
