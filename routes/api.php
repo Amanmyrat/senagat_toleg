@@ -28,7 +28,6 @@ Route::prefix('v1')->group(function () {
         Route::get('balances', [TelecomController::class, 'handle']);
 
         // Payment
-        Route::get('pay', [TelecomPaymentController::class, 'handle']);
         Route::post('top-up', [TelecomController::class, 'store']);
 
     });
