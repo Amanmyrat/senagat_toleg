@@ -29,7 +29,7 @@ class TelecomPaymentService
             'txn_id'   => $txnId,
             'txn_date' => $txnDate,
             'account'  => $params['account'],
-            'sum'      => MoneyHelper::decimalToInt($params['amount']) / 100,
+            'sum' => number_format(MoneyHelper::decimalToInt($params['amount']) / 100, 2, '.', ''),
             'curr'     => 'TMT',
         ]);
 
