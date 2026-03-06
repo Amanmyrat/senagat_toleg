@@ -5,12 +5,25 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\TxnIdGenerator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Telecom\TelecomBalanceRequest;
+use App\Http\Requests\TelecomTopupRequest;
 use App\Http\Resources\TelecomBalanceResource;
 use App\Services\Telecom\TelecomPaymentService;
-use Illuminate\Http\Request;
+use App\Services\Telecom\TelecomTopupService;
+use Illuminate\Http\JsonResponse;
 
-class TelecomBalanceController extends Controller
+class TelecomController extends Controller
 {
+    /**
+     * Telecom Pay
+     *
+     * @unauthenticated
+     */
+    public function store(TelecomTopupRequest $request)
+    {
+        return new JsonResponse(
+            app(TelecomTopupService::class)->create($request->validated())
+        );
+    }
     /**
      * Telecom balance
      *

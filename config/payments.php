@@ -72,13 +72,35 @@ return [
         'charity' => [
             'userName' => env('SENAGAT_CHARITY_USERNAME'),
             'password' => env('SENAGAT_CHARITY_PASSWORD'),
-            'return_url' => env('SENAGAT_CHARITY_RETURN_URL'),
+            'return_url' => env('SENAGAT_RETURN_URL'),
         ],
 
         'telecom' => [
             'userName' => env('SENAGAT_TELECOM_USERNAME'),
             'password' => env('SENAGAT_TELECOM_PASSWORD'),
-            'return_url' => env('SENAGAT_TELECOM_RETURN_URL'),
+            'return_url' => env('SENAGAT_RETURN_URL'),
+        ],
+        'astu' => [
+            'iptv' => [
+                'userName' => env('SENAGAT_ASTU_IPTV_USERNAME'),
+                'password' => env('SENAGAT_ASTU_IPTV_PASSWORD'),
+                'return_url' => env('SENAGAT_RETURN_URL'),
+            ],
+            'internet' => [
+                'userName' => env('SENAGAT_ASTU_INTERNET_USERNAME'),
+                'password' => env('SENAGAT_ASTU_INTERNET_PASSWORD'),
+                'return_url' => env('SENAGAT_RETURN_URL'),
+            ],
+            'phone' => [
+                'userName' => env('SENAGAT_ASTU_PHONE_USERNAME'),
+                'password' => env('SENAGAT_ASTU_PHONE_PASSWORD'),
+                'return_url' => env('SENAGAT_RETURN_URL'),
+            ],
+            'cdma' => [
+                'userName' => env('SENAGAT_ASTU_CDMA_USERNAME'),
+                'password' => env('SENAGAT_ASTU_CDMA_PASSWORD'),
+                'return_url' => env('SENAGAT_RETURN_URL'),
+            ],
         ],
     ],
 
@@ -91,13 +113,35 @@ return [
         'charity' => [
             'userName' => env('HALK_BANK_CHARITY_USERNAME'),
             'password' => env('HALK_BANK_CHARITY_PASSWORD'),
-            'return_url' => env('HALK_BANK_CHARITY_RETURN_URL'),
+            'return_url' => env('HALK_BANK_RETURN_URL'),
         ],
 
         'telecom' => [
             'userName' => env('HALK_BANK_TELECOM_USERNAME'),
             'password' => env('HALK_BANK_TELECOM_PASSWORD'),
-            'return_url' => env('HALK_BANK_TELECOM_RETURN_URL'),
+            'return_url' => env('HALK_BANK_RETURN_URL'),
+        ],
+        'astu' => [
+            'iptv' => [
+                'userName' => env('SENAGAT_ASTU_IPTV_USERNAME'),
+                'password' => env('SENAGAT_ASTU_IPTV_PASSWORD'),
+                'return_url' => env('HALK_BANK_RETURN_URL'),
+            ],
+            'internet' => [
+                'userName' => env('SENAGAT_ASTU_INTERNET_USERNAME'),
+                'password' => env('SENAGAT_ASTU_INTERNET_PASSWORD'),
+                'return_url' => env('HALK_BANK_RETURN_URL'),
+            ],
+            'phone' => [
+                'userName' => env('SENAGAT_ASTU_PHONE_USERNAME'),
+                'password' => env('SENAGAT_ASTU_PHONE_PASSWORD'),
+                'return_url' => env('HALK_BANK_RETURN_URL'),
+            ],
+            'cdma' => [
+                'userName' => env('SENAGAT_ASTU_CDMA_USERNAME'),
+                'password' => env('SENAGAT_ASTU_CDMA_PASSWORD'),
+                'return_url' => env('HALK_BANK_RETURN_URL'),
+            ],
         ],
     ],
 
@@ -110,13 +154,36 @@ return [
         'charity' => [
             'userName' => env('RYSGAL_BANK_CHARITY_USERNAME'),
             'password' => env('RYSGAL_BANK_CHARITY_PASSWORD'),
-            'return_url' => env('RYSGAL_BANK_CHARITY_RETURN_URL'),
+            'return_url' => env('RYSGAL_BANK_RETURN_URL'),
         ],
 
         'telecom' => [
             'userName' => env('RYSGAL_BANK_TELECOM_USERNAME'),
             'password' => env('RYSGAL_BANK_TELECOM_PASSWORD'),
-            'return_url' => env('RYSGAL_BANK_TELECOM_RETURN_URL'),
+            'return_url' => env('RYSGAL_BANK_RETURN_URL'),
+        ],
+        'astu' => [
+            'iptv' => [
+                'userName' => env('RYSGAL_BANK_ASTU_IPTV_USERNAME'),
+                'password' => env('RYSGAL_BANK_ASTU_IPTV_PASSWORD'),
+                'return_url' => env('RYSGAL_BANK_RETURN_URL'),
+            ],
+            'internet' => [
+                'userName' => env('RYSGAL_BANK_ASTU_INTERNET_USERNAME'),
+                'password' => env('RYSGAL_BANK_ASTU_INTERNET_PASSWORD'),
+                'return_url' => env('RYSGAL_BANK_RETURN_URL'),
+            ],
+            'phone' => [
+                'userName' => env('RYSGAL_BANK_ASTU_PHONE_USERNAME'),
+                'password' => env('RYSGAL_BANK_ASTU_PHONE_PASSWORD'),
+                'return_url' => env('RYSGAL_BANK_RETURN_URL'),
+            ],
+            'cdma' => [
+                'userName' => env('RYSGAL_BANK_ASTU_CDMA_USERNAME'),
+                'password' => env('RYSGAL_BANK_ASTU_CDMA_PASSWORD'),
+                'return_url' => env('RYSGAL_BANK_RETURN_URL'),
+            ],
         ],
     ],
+
 ];

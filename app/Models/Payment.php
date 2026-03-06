@@ -33,6 +33,7 @@ class Payment extends Model
         'user_information' => 'array',
         'payment_target' => 'array',
         'error_code' => 'integer',
+        'extras' => 'array',
     ];
 
     public function isPending(): bool
