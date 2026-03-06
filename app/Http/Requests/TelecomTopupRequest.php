@@ -28,7 +28,7 @@ class TelecomTopupRequest extends FormRequest
              *
              * @var int
              *
-             * @example rysgal
+             * @example senagat
              */
             'bank_name' => ['required', 'string'],
 

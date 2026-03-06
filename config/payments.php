@@ -65,7 +65,7 @@ return [
 
     'senagat' => [
         'base_url' => env('SENAGAT_BASE_URL'),
-        'pay_endpoint' => env('CHARITY_ENDPOINT'),
+        'pay_endpoint' => env('PAY_ENDPOINT'),
         'status_endpoint' => env('STATUS_ENDPOINT'),
         'currency' => (int)env('CURRENCY', 934),
 
@@ -106,7 +106,7 @@ return [
 
     'altyn_asyr' => [
         'base_url' => env('HALK_BANK_BASE_URL'),
-        'pay_endpoint' => env('CHARITY_ENDPOINT'),
+        'pay_endpoint' => env('PAY_ENDPOINT'),
         'status_endpoint' => env('STATUS_ENDPOINT'),
         'currency' => (int)env('CURRENCY', 934),
 
@@ -147,7 +147,7 @@ return [
 
     'rysgal' => [
         'base_url' => env('RYSGAL_BANK_BASE_URL'),
-        'pay_endpoint' => env('CHARITY_ENDPOINT'),
+        'pay_endpoint' => env('PAY_ENDPOINT'),
         'status_endpoint' => env('STATUS_ENDPOINT'),
         'currency' => (int)env('CURRENCY', 934),
 
