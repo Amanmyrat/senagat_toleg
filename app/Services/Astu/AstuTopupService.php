@@ -3,9 +3,11 @@
 namespace App\Services\Astu;
 
 use App\Helpers\MoneyHelper;
+use App\Jobs\AstuStatusJob;
 use App\Models\Payment;
 use App\Services\BankResolverService;
 use App\Services\Payments\PaymentGatewayResolver;
+use Illuminate\Support\Facades\Log;
 
 class AstuTopupService
 {
@@ -38,6 +40,14 @@ class AstuTopupService
             ],
             'status' => 'pending',
         ]);
+        Log::channel('astu')->info('Astu payment created', [
+            'payment_id' => $payment->id,
+            'pay_id'     => $payment->pay_id,
+            'account'    => $payload['account'],
+            'type'       => $payload['type'],
+            'amount'     => $payload['amount'],
+            'bank'       => $bankKey,
+        ]);
 
         $gateway = $this->gatewayResolver->resolve(
             $payload['bank_name'],
@@ -65,14 +75,8 @@ class AstuTopupService
             'order_id' => $response['orderId'] ?? null,
             'status' => 'pending',
         ]);
+        AstuStatusJob::dispatch($payment)->delay(now()->addSeconds(30));
 
-//        return [
-//            'success' => true,
-//            'data' => [
-//                'orderId' => $response['orderId'] ?? null,
-//                'payment_url' => $response['formUrl'] ?? null,
-//            ],
-//        ];
         return [
             'success' => true,
             'data' => $response,

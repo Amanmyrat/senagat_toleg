@@ -3,7 +3,6 @@
 namespace App\Services\Telecom;
 
 use App\Helpers\MoneyHelper;
-use App\Helpers\TxnIdGenerator;
 use App\Jobs\TelecomStatusJob;
 use App\Models\Payment;
 use App\Services\BankResolverService;
