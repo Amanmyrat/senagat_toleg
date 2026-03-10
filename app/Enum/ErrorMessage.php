@@ -20,10 +20,11 @@ enum ErrorMessage: string
     case ORDER_ID_INVALID = 'orderId_must_be_a_valid_string.';
     case PAY_ID_INVALID = 'pay_id_must_be_a_valid_string.';
     case ID_REQUIRED = 'order_ID_is_required';
-    case BANK_NAME_INVALID = 'Invalid bank name.';
-    case ACCOUNT_REQUIRED = 'Account is required.';
-    case ACCOUNT_INVALID = 'Account is invalid.';
-    case TYPE_REQUIRED = 'Type is required.';
-    case TYPE_INVALID = 'Invalid service type.';
+    case BANK_NAME_INVALID = 'invalid_bank_name.';
+    case ACCOUNT_REQUIRED = 'account_is_required.';
+    case ACCOUNT_INVALID = 'account_is_invalid.';
+    case TYPE_REQUIRED = 'type_is_required.';
+    case TYPE_INVALID = 'invalid_service_type.';
+    case NO_INTERNET_CONNECTION ='no_internet_connection';
 
 }
