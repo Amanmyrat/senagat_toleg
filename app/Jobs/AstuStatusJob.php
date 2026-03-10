@@ -16,8 +16,8 @@ class AstuStatusJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $tries = 10;
-    public int $backoff = 30;
+    public int $tries = 15;
+    public int $backoff = 20;
 
     public function __construct(
         public Payment $payment
@@ -37,10 +37,15 @@ class AstuStatusJob implements ShouldQueue
         try {
 
             $payment = $this->payment->fresh();
-
-            $astuService = $this->payment->payment_target['type'];
-
-            $gateway = $gatewayResolver->resolve($payment->bank_key, 'astu',$astuService);
+            if (! $payment->order_id) {
+                Log::channel('astu')->warning('order_id is null, releasing', [
+                    'payment_id' => $payment->id,
+                ]);
+                $this->release(30);
+                return;
+            }
+            $serviceType = $payment->payment_target['type'];
+            $gateway = $gatewayResolver->resolve($payment->bank_key, 'astu',$serviceType);
             $response = $gateway->checkPaymentStatus($payment->order_id);
             $errorCode = (string)($response['ErrorCode'] ?? '');
             $orderStatus = (int)($response['OrderStatus'] ?? -1);
