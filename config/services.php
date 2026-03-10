@@ -38,5 +38,9 @@ return [
         'url' => env('TELECOM_BILLING_URL'),
         'secret' => env('TELECOM_BILLING_SECRET'),
     ],
+    'astu' => [
+        'url' => env('ASTU_BASE_URL'),
+        'ip'  => env('ASTU_IP', '127.0.0.1'),
+    ],
 
 ];

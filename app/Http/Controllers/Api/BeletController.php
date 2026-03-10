@@ -31,7 +31,6 @@ class BeletController extends Controller
         $this->status = $status;
 
     }
-
     /**
      * Banks list
      *
@@ -43,7 +42,6 @@ class BeletController extends Controller
 
         return new JsonResponse($result);
     }
-
     /**
      * Balance Recommendations
      *
@@ -55,29 +53,11 @@ class BeletController extends Controller
 
         return new JsonResponse($result);
     }
-
     /**
      * Balance Top Up
      *
      * @unauthenticated
      */
-    //    public function topUp(
-    //        BeletBalanceTopUpRequest $request,
-    //        BeletBalanceService $balanceService
-    //    ): JsonResponse {
-    //        $payload = [
-    //            'user_id' => $request->user()->id ?? null,
-    //            'bank_id' => $request->bank_id,
-    //            'amount_in_manats' => $request->amount_in_manats,
-    //            'phone' => $request->phone,
-    //            'returnUrl' => $request->returnUrl,
-    //            'client_ip' => $request->ip(),
-    //        ];
-    //
-    //        return response()->json(
-    //            $balanceService->topUp($payload)
-    //        );
-    //    }
     public function topUp(
         BeletBalanceTopUpRequest $request,
         BeletBalanceService $balanceService
@@ -121,10 +101,4 @@ class BeletController extends Controller
      *
      * @unauthenticated
      */
-    //    public function status(string $id): JsonResponse
-    //    {
-    //        $response = $this->status->checkStatus($id);
-    //
-    //        return new JsonResponse($response);
-    //    }
 }

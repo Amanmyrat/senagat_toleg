@@ -12,7 +12,6 @@ class TelecomBalanceRequest extends FormRequest
             'account' => 'required|string|max:200',
         ];
     }
-
     public function authorize(): bool
     {
         return true;

@@ -13,14 +13,11 @@ class TelecomPaymentRequest extends FormRequest
     {
         return true;
     }
-
-
     public function rules(): array
     {
         return [
 
             'account'  => 'required|string|max:200',
-
             'amount'   => 'required|numeric|min:0.01',
 
         ];

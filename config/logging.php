@@ -141,6 +141,12 @@ return [
             'level' => 'info',
             'days' => 60,
         ],
+        'astu' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/astu/astu.log'),
+            'level' => 'info',
+            'days' => 60,
+        ],
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],

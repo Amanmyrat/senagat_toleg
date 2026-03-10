@@ -40,7 +40,6 @@ class TelecomController extends Controller
             $request->validated(),
             $txnId
         );
-
         return new TelecomBalanceResource(
             array_merge($result, [
                 'txn_id' => $txnId,
