@@ -28,8 +28,10 @@ Route::prefix('v1')->group(function () {
         // Payment
         Route::post('top-up', [TelecomController::class, 'store']);
     });
-
+     //ASTU
     Route::prefix('astu')->group(function () {
         Route::post('topup', [AstuController::class, 'store']);
+        Route::post('balance', [AstuController::class, 'balance']);
+        Route::post('update-balance', [AstuController::class, 'updateBalance']);
     });
 });

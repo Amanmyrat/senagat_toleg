@@ -3,12 +3,9 @@
 namespace App\Services\Charity;
 
 use App\Helpers\MoneyHelper;
-use App\Http\Resources\CharityStatusResource;
 use App\Models\Payment;
 use App\Services\BankResolverService;
 use App\Services\Payments\PaymentGatewayResolver;
-use App\Support\Money;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
 class CharityService
@@ -93,72 +90,6 @@ class CharityService
             return $this->error(500, $e->getMessage());
         }
     }
-
-    /**
-     * Check payment status and update DB
-     */
-
-    //    public function checkPaymentStatus(string $orderId)
-    //    {
-    //        $payment = Payment::where('order_id', $orderId)->first();
-    //        if (!$payment) {
-    //            return new JsonResponse([
-    //                'success' => false,
-    //                'error'   => ['code' => 404, 'message' => 'Payment not found'],
-    //                'data'    => null,
-    //            ]);
-    //        }
-    //
-    //        if (!$payment->bank_key) {
-    //            return new JsonResponse([
-    //                'success' => false,
-    //                'error' => ['code' => 422, 'message' => 'Payment bank_key is missing'],
-    //                'data' => null,
-    //            ]);
-    //        }
-    //        try {
-    //            $gateway = $this->gatewayResolver->resolve($payment->bank_key);
-    //            $response = $gateway->checkPaymentStatus($payment->order_id);
-    //            $orderStatus  = isset($response['OrderStatus'])
-    //                ? (int) $response['OrderStatus']
-    //                : null;
-    //
-    //            $errorMessage = $response['ErrorMessage'] ?? null;
-    //            $amountDecimal =  Money::fromCents($response['Amount']);
-    //            $mappedStatus = match ($orderStatus) {
-    //                2 => 'confirmed',
-    //                1 => 'pending',
-    //                0 => 'failed',
-    //                default => 'pending',
-    //            };
-    //            $payment->update([
-    //                'status' => $mappedStatus,
-    //                'error_message' => $errorMessage,
-    //            ]);
-    //            Log::channel('charity')->info('Payment status checked', [
-    //                'order_id' => $payment->order_id,
-    //                'bank_key' => $payment->bank_key,
-    //                'order_status' => $orderStatus,
-    //                'amount_decimal'=>$amountDecimal,
-    //            ]);
-    //            return  new CharityStatusResource($response);
-    //        } catch (\Throwable $e) {
-    //            Log::channel('charity')->error('Payment status check failed', [
-    //                'order_id' => $orderId,
-    //                'error' => $e->getMessage(),
-    //            ]);
-    //
-    //            return new JsonResponse( [
-    //                'success' => false,
-    //                'error' => [
-    //                    'code' => 500,
-    //                    'message' => 'Payment status check failed',
-    //                ],
-    //                'data' => null,
-    //            ]);
-    //        }
-    //    }
-
     protected function generateUniqueOrderId(): string
     {
         do {

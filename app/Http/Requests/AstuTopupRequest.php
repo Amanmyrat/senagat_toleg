@@ -33,7 +33,6 @@ class AstuTopupRequest extends FormRequest
              *
              * @example rysgal
              */
-
             'bank_name' => ['required',  Rule::in(BankNameEnum::values())],
             /**
              * Account .
@@ -52,7 +51,6 @@ class AstuTopupRequest extends FormRequest
              */
             'type' => ['required',  Rule::in(TopupTypeEnum::values())],
 
-
             /**
              * Amount in manats.
              *
@@ -69,12 +67,9 @@ class AstuTopupRequest extends FormRequest
         return [
 
             'bank_name.in' => ErrorMessage::BANK_NAME_INVALID->value,
-
             'account.required' => ErrorMessage::ACCOUNT_REQUIRED->value,
-
             'type.required' => ErrorMessage::TYPE_REQUIRED->value,
             'type.in' => ErrorMessage::TYPE_INVALID->value,
-
             'amount.required' => ErrorMessage::AMOUNT_REQUIRED->value,
             'amount.numeric' => ErrorMessage::AMOUNT_INVALID->value,
             'amount.min' => ErrorMessage::AMOUNT_MIN->value,

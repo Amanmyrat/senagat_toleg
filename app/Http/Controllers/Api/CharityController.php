@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CharityRequest;
-use App\Http\Requests\CheckPaymentStatusRequest;
 use App\Services\Charity\CharityService;
 use App\Services\Payments\PaymentGatewayResolver;
 use Illuminate\Http\JsonResponse;
@@ -25,7 +24,6 @@ class CharityController extends Controller
         $this->charityService = $charityService;
         $this->gatewayResolver = $gatewayResolver;
     }
-
     /**
      * Send Charity payment
      */
@@ -36,17 +34,9 @@ class CharityController extends Controller
 
         return new JsonResponse($response);
     }
-
     /**
      * Check payment status
      *
      * @unauthenticated
      */
-    //    public function checkStatus(CheckPaymentStatusRequest $request): JsonResponse
-    //    {
-    //        $orderId = $request->validated()['orderId'];
-    //        $response = $this->charityService->checkPaymentStatus($orderId);
-    //
-    //        return response()->json($response);
-    //    }
 }
