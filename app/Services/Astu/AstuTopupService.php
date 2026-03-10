@@ -40,6 +40,12 @@ class AstuTopupService
             ],
             'status' => 'pending',
         ]);
+
+        $extras['astu_service_type'] = $payload['type'];
+        $payment->update([
+            'extras' => $extras
+        ]);
+
         Log::channel('astu')->info('Astu payment created', [
             'payment_id' => $payment->id,
             'pay_id'     => $payment->pay_id,
@@ -69,7 +75,6 @@ class AstuTopupService
                 $response['error']['message'] ?? 'Gateway error'
             );
         }
-
 
         $payment->update([
             'order_id' => $response['orderId'] ?? null,

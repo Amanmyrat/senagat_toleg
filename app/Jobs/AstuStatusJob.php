@@ -38,7 +38,10 @@ class AstuStatusJob implements ShouldQueue
 
             $payment = $this->payment->fresh();
 
-            $gateway = $gatewayResolver->resolve($payment->bank_key, 'astu');
+            $extras = $this->payment->extras ?? [];
+            $astuService = $extras['astu_service_name'];
+
+            $gateway = $gatewayResolver->resolve($payment->bank_key, 'astu',$astuService);
             $response = $gateway->checkPaymentStatus($payment->order_id);
             $errorCode = (string)($response['ErrorCode'] ?? '');
             $orderStatus = (int)($response['OrderStatus'] ?? -1);
