@@ -2,6 +2,8 @@
 
 namespace App\Services\Telecom;
 
+use App\Enum\ErrorMessage;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -9,6 +11,8 @@ class TelecomClient
 {
     public function send(array $params)
     {
+        try {
+
         $params['md5'] = $this->sign($params);
         Log::channel('telecom')->info('Telecom request', [
             'params' => $params,
@@ -24,8 +28,19 @@ class TelecomClient
             'headers' => $response->headers(),
             'body'    => $response->body(),
         ]);
-        return $response;
-    }
+            return [
+                'success' => true,
+                'body' => $response->body()
+            ];
+        }catch (ConnectionException $e) {
+
+            return [
+                'success' => false,
+                'result'  => 500,
+                'comment' => ErrorMessage::NO_INTERNET_CONNECTION,
+            ];
+        }
+        }
 
     private function sign(array $params): string
     {

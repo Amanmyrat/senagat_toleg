@@ -19,7 +19,14 @@ class TelecomPaymentService
             'curr'    => 'TMT',
         ]);
 
-        return $this->parseXml($response->body());
+        if (!$response['success']) {
+            return [
+                'result'  => $response['result'],
+                'comment' => $response['comment'],
+            ];
+        }
+
+        return $this->parseXml($response['body']);
     }
 
     public function pay(array $params, string $txnId,string $txnDate): array
@@ -33,7 +40,14 @@ class TelecomPaymentService
             'curr'     => 'TMT',
         ]);
 
-        return $this->parseXml($response->body());
+        if (!$response['success']) {
+            return [
+                'result'  => $response['result'],
+                'comment' => $response['comment'],
+            ];
+        }
+
+        return $this->parseXml($response['body']);
     }
     /**
      * Telecom XML -> array
