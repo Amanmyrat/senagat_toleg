@@ -52,7 +52,7 @@ class SenagatGateway implements PaymentGateway
                 ->post($this->config['base_url'].$this->config['pay_endpoint'], $formData);
 
             Log::info('Gateway resolve', [
-                'bankKey' => $bankKey ?? null,
+                'bankKey' => $this->bankKey ?? null,
             ]);
 
             return $response->json() ?? [
