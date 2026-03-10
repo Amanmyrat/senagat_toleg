@@ -42,6 +42,9 @@ class AstuClient
 
             return $response->json() ?? [];
         }catch (ConnectionException $e) {
+            Log::channel('astu')->error('Astu getBalance exception', [
+                'message' => $e->getMessage(),
+            ]);
             return [
                 'success' => false,
                 'result'  => 500,
