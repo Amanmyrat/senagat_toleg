@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enum\TopupTypeEnum;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AstuBalanceRequest extends FormRequest
 {
@@ -15,7 +17,7 @@ class AstuBalanceRequest extends FormRequest
     {
         return [
             'account' => 'required|string|max:50',
-            'type'    => 'required|string|in:phone,iptv,inet',
+            'type' => ['required',  Rule::in(TopupTypeEnum::values())],
         ];
     }
 }
