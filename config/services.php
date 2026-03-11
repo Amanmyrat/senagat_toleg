@@ -42,5 +42,9 @@ return [
         'url' => env('ASTU_BASE_URL'),
         'ip'  => env('ASTU_IP', '127.0.0.1'),
     ],
+    'tmcell' => [
+     'base_url' => env('TMCELL_BASE_URL'),
+     'ps_id'    => env('TMCELL_PS_ID'),
+    ],
 
 ];
