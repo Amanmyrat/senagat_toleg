@@ -41,20 +41,6 @@ class AstuController extends Controller
             )
         );
     }
-    /**
-     * Astu update balance
-     */
-    public function updateBalance(Request $request): JsonResponse
-    {
-        $request->validate([
-            'payment_id' => 'required|integer|exists:payments,id',
-        ]);
 
-        $payment = Payment::findOrFail($request->input('payment_id'));
-
-        return new JsonResponse(
-            $this->astuService->updateBalance($payment)
-        );
-    }
 
 }
