@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Helpers\TxnIdGenerator;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Telecom\TelecomBalanceRequest;
-use App\Http\Requests\TelecomTopupRequest;
+use App\Http\Requests\Telecom\TelecomTopupRequest;
 use App\Http\Resources\TelecomBalanceResource;
 use App\Services\Telecom\TelecomPaymentService;
 use App\Services\Telecom\TelecomTopupService;

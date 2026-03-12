@@ -80,6 +80,11 @@ return [
             'password' => env('SENAGAT_TELECOM_PASSWORD'),
             'return_url' => env('SENAGAT_RETURN_URL'),
         ],
+        'tmcell'=>[
+            'userName' => env('SENAGAT_TMCELL_USERNAME'),
+            'password' => env('SENAGAT_TMCELL_PASSWORD'),
+            'return_url' => env('SENAGAT_RETURN_URL'),
+        ],
         'astu' => [
             'iptv' => [
                 'userName' => env('SENAGAT_ASTU_IPTV_USERNAME'),
@@ -121,25 +126,30 @@ return [
             'password' => env('HALK_BANK_TELECOM_PASSWORD'),
             'return_url' => env('HALK_BANK_RETURN_URL'),
         ],
+        'tmcell'=>[
+            'userName' => env('HALK_BANK_TMCELL_USERNAME'),
+            'password' => env('HALK_BANK_TMCELL_PASSWORD'),
+            'return_url' => env('HALK_BANK_RETURN_URL'),
+        ],
         'astu' => [
             'iptv' => [
-                'userName' => env('SENAGAT_ASTU_IPTV_USERNAME'),
-                'password' => env('SENAGAT_ASTU_IPTV_PASSWORD'),
+                'userName' => env('HALK_BANK_ASTU_IPTV_USERNAME'),
+                'password' => env('HALK_BANK_ASTU_IPTV_PASSWORD'),
                 'return_url' => env('HALK_BANK_RETURN_URL'),
             ],
             'internet' => [
-                'userName' => env('SENAGAT_ASTU_INTERNET_USERNAME'),
-                'password' => env('SENAGAT_ASTU_INTERNET_PASSWORD'),
+                'userName' => env('HALK_BANK_ASTU_INTERNET_USERNAME'),
+                'password' => env('HALK_BANK_ASTU_INTERNET_PASSWORD'),
                 'return_url' => env('HALK_BANK_RETURN_URL'),
             ],
             'phone' => [
-                'userName' => env('SENAGAT_ASTU_PHONE_USERNAME'),
-                'password' => env('SENAGAT_ASTU_PHONE_PASSWORD'),
+                'userName' => env('HALK_BANK_ASTU_PHONE_USERNAME'),
+                'password' => env('HALK_BANK_ASTU_PHONE_PASSWORD'),
                 'return_url' => env('HALK_BANK_RETURN_URL'),
             ],
             'cdma' => [
-                'userName' => env('SENAGAT_ASTU_CDMA_USERNAME'),
-                'password' => env('SENAGAT_ASTU_CDMA_PASSWORD'),
+                'userName' => env('HALK_BANK_ASTU_CDMA_USERNAME'),
+                'password' => env('HALK_BANK_ASTU_CDMA_PASSWORD'),
                 'return_url' => env('HALK_BANK_RETURN_URL'),
             ],
         ],
@@ -160,6 +170,11 @@ return [
         'telecom' => [
             'userName' => env('RYSGAL_BANK_TELECOM_USERNAME'),
             'password' => env('RYSGAL_BANK_TELECOM_PASSWORD'),
+            'return_url' => env('RYSGAL_BANK_RETURN_URL'),
+        ],
+        'tmcell'=>[
+            'userName' => env('RYSGAL_BANK_TMCELL_USERNAME'),
+            'password' => env('RYSGAL_BANK_TMCELL_PASSWORD'),
             'return_url' => env('RYSGAL_BANK_RETURN_URL'),
         ],
         'astu' => [

@@ -3,6 +3,7 @@
 namespace App\Services\TmCell;
 
 use App\Helpers\MoneyHelper;
+use App\Jobs\TmCellStatusJob;
 use App\Models\Payment;
 use App\Services\BankResolverService;
 use App\Services\Payments\PaymentGatewayResolver;
@@ -13,10 +14,25 @@ class TmCellTopupService
     public function __construct(
         protected BankResolverService    $bankResolver,
         protected PaymentGatewayResolver $gatewayResolver,
+        protected TmCellService          $tmCellService,
     ) {}
 
     public function create(array $payload): array
     {
+//        $preCheck = $this->tmCellService->paymentPreCheck($payload['phone']);
+//
+//        if (! $preCheck['success']) {
+//            Log::channel('tmcell')->warning('TmCell paymentPreCheck failed', [
+//                'phone' => $payload['phone'],
+//                'error' => $preCheck['error'] ?? null,
+//            ]);
+//
+//            return $this->error(
+//                422,
+//                $preCheck['error']['message'] ?? 'Phone number not found or invalid'
+//            );
+//        }
+
         $bankId = $this->bankResolver->resolveIdByName($payload['bank_name']);
 
         if (! $bankId) {
@@ -50,7 +66,6 @@ class TmCellTopupService
         $gateway = $this->gatewayResolver->resolve(
             $payload['bank_name'],
             'tmcell',
-            null
         );
 
         $response = $gateway->createPayment([
@@ -64,7 +79,7 @@ class TmCellTopupService
 
             return $this->error(
                 $response['error']['code'] ?? 500,
-                $response['error']['message'] ?? 'Gateway error'
+                $response['error']['message'] ?? 'Gateway_error'
             );
         }
 
@@ -72,7 +87,7 @@ class TmCellTopupService
             'order_id' => $response['orderId'] ?? null,
             'status'   => 'pending',
         ]);
-
+        TmCellStatusJob::dispatch($payment)->delay(now()->addSeconds(30));
         return [
             'success' => true,
             'data'    => $response,
