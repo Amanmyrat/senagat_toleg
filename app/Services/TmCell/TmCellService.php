@@ -118,7 +118,6 @@ class TmCellService
 
         $status = $response['status'] ?? '';
 
-        // OK or ERR_REPEAT (already processed) → success
         $success = in_array($status, ['OK', 'ERR_REPEAT']);
 
         if ($success) {

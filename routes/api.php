@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AstuController;
 use App\Http\Controllers\Api\BeletController;
 use App\Http\Controllers\Api\CharityController;
 use App\Http\Controllers\Api\TelecomController;
+use App\Http\Controllers\Api\TmCellController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -28,9 +29,17 @@ Route::prefix('v1')->group(function () {
         // Payment
         Route::post('top-up', [TelecomController::class, 'store']);
     });
-     //ASTU
+     //ASTU CRUD
     Route::prefix('astu')->group(function () {
         Route::post('topup', [AstuController::class, 'store']);
         Route::post('balance', [AstuController::class, 'balance']);
+    });
+    //TMCELL CRUD
+    Route::prefix('tm_cell')->group(function () {
+
+        // Balance check
+        Route::get('balance', [TmCellController::class, 'balance']);
+        // Payment
+        Route::post('pay', [TmCellController::class, 'store']);
     });
 });

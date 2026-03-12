@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Telecom;
 
 use App\Enum\ErrorMessage;
 use Illuminate\Foundation\Http\FormRequest;
@@ -56,14 +56,12 @@ class TelecomTopupRequest extends FormRequest
     public function messages(): array
     {
         return [
-
             'bank_name.required' => ErrorMessage::BANK_NAME_REQUIRED->value,
             'amount.required' => ErrorMessage::AMOUNT_REQUIRED->value,
             'amount.numeric' => ErrorMessage::AMOUNT_INVALID->value,
             'amount.min' => ErrorMessage::AMOUNT_MIN->value,
             'phone.required' => ErrorMessage::PHONE_NUMBER_REQUIRED->value,
             'phone.regex' => ErrorMessage::PHONE_NUMBER_INVALID->value,
-
         ];
     }
 }
