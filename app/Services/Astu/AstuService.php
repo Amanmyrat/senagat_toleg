@@ -17,10 +17,13 @@ class AstuService
         return match ($type) {
             'phone' => $account . '-12',
             'iptv'  => 'iptv-' . $account,
-            'inet'  => 'inet-' . $account,
+            'internet' => 'inet-' . $account,
+            'cdma'     => 'cdma-' . $account,
+            default    => throw new \InvalidArgumentException(
+                "unsupported_account_type: '{$type}'"
+            ),
         };
     }
-
 
     public function getBalance(string $account, string $type): array
     {
@@ -37,9 +40,7 @@ class AstuService
                 'data'    => null,
             ];
         }
-
         $result = $response['result'] ?? '';
-
         if ($result !== 'action_success') {
             return [
                 'success' => false,
@@ -90,12 +91,8 @@ class AstuService
                 'data'    => null,
             ];
         }
-
         $result = $response['result'] ?? '';
-
-        // action_success veya payment_already_exists → başarı
         $success = in_array($result, ['action_success', 'payment_already_exists']);
-
         if ($success) {
             $extras = $payment->extras ?? [];
             $extras['astu_receipt']   = $response['receipt'] ?? $receiptNum;
@@ -107,7 +104,6 @@ class AstuService
                 'extras' => $extras,
             ]);
         }
-
         return [
             'success'          => $success,
             'result'           => $result,
