@@ -63,6 +63,7 @@ class AstuStatusJob implements ShouldQueue
                     'payment_id' => $payment->id,
                 ]);
                 $payment->update(['status' => 'failed']);
+                NotifyMainBackendJob::dispatch($payment->order_id, 'failed', 'astu');
                 return;
             }
 
@@ -72,6 +73,7 @@ class AstuStatusJob implements ShouldQueue
                         'payment_id' => $payment->id,
                     ]);
                     $payment->update(['status' => 'failed']);
+                    NotifyMainBackendJob::dispatch($payment->order_id, 'failed', 'astu');
                     return;
                 }
 
@@ -116,6 +118,7 @@ class AstuStatusJob implements ShouldQueue
                     'payment_id' => $payment->id,
                     'result' => $result['result'],
                 ]);
+                NotifyMainBackendJob::dispatch($payment->order_id, 'failed', 'astu');
                 return;
             }
 
@@ -128,6 +131,7 @@ class AstuStatusJob implements ShouldQueue
                     'payment_id' => $payment->id,
                     'result' => $result['result'],
                 ]);
+                NotifyMainBackendJob::dispatch($payment->order_id, 'failed', 'astu');
                 return;
             }
 
