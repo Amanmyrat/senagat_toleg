@@ -96,9 +96,17 @@ class BeletController extends Controller
 
         return new JsonResponse($result);
     }
+
     /**
-     * Order status
+     * Check User Balance
      *
      * @unauthenticated
      */
+    public function checkBalance(BeletCheckPhoneRequest $request, BeletUserService $belet)
+    {
+        $phone = $request->input('phone');
+        $result = $belet->checkBalance($phone);
+
+        return new JsonResponse($result);
+    }
 }

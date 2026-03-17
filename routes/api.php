@@ -14,11 +14,12 @@ Route::prefix('v1')->group(function () {
         Route::post('top-up', [BeletController::class, 'topUp']);
         Route::post('confirm', [BeletController::class, 'confirm']);
         Route::post('/check-phone', [BeletController::class, 'checkPhone']);
+        Route::get('checkBalance', [BeletController::class, 'checkBalance']);
         //        Route::get('/orders/{id}/status', [BeletController::class, 'status']);
     });
     Route::post('/charity', [CharityController::class, 'store']);
-    //    Route::post('/check-status', [CharityController::class, 'checkStatus']);
-    //    Route::get('payments/status/{orderId}', [PaymentStatusController::class, 'checkStatus']);
+        Route::post('/check-status', [CharityController::class, 'checkStatus']);
+     //   Route::get('payments/status/{orderId}', [PaymentStatusController::class, 'checkStatus']);
 
     Route::prefix('telecom')->group(function () {
 

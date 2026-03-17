@@ -47,4 +47,8 @@ return [
      'ps_id'    => env('TMCELL_PS_ID'),
     ],
 
+    'senagat_back' => [
+        'webhook_url'    => env('SENAGAT_BACK_WEBHOOK_URL'),
+        'webhook_secret' => env('SENAGAT_BACK_WEBHOOK_SECRET'),
+    ],
 ];

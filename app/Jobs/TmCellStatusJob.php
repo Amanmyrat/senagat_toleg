@@ -58,6 +58,7 @@ class TmCellStatusJob implements ShouldQueue
                     'response'   => $response,
                 ]);
                 $payment->update(['status' => 'failed']);
+                NotifyMainBackendJob::dispatch($payment->order_id, 'failed', 'tmcell');
                 return;
             }
 
@@ -67,6 +68,7 @@ class TmCellStatusJob implements ShouldQueue
                         'payment_id' => $payment->id,
                     ]);
                     $payment->update(['status' => 'failed']);
+                    NotifyMainBackendJob::dispatch($payment->order_id, 'failed', 'tmcell');
                     return;
                 }
 
@@ -114,6 +116,7 @@ class TmCellStatusJob implements ShouldQueue
                     'payment_id' => $payment->id,
                     'status'     => $result['status'],
                 ]);
+                NotifyMainBackendJob::dispatch($payment->order_id, 'failed', 'tmcell');
                 return;
             }
 
@@ -126,6 +129,7 @@ class TmCellStatusJob implements ShouldQueue
                     'payment_id' => $payment->id,
                     'status'     => $result['status'],
                 ]);
+                NotifyMainBackendJob::dispatch($payment->order_id, 'failed', 'tmcell');
                 return;
             }
 

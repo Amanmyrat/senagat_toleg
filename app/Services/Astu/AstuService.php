@@ -3,6 +3,7 @@
 namespace App\Services\Astu;
 
 use App\Helpers\MoneyHelper;
+use App\Jobs\NotifyMainBackendJob;
 use App\Models\Payment;
 
 class AstuService
@@ -103,6 +104,7 @@ class AstuService
                 'status' => 'confirmed',
                 'extras' => $extras,
             ]);
+            NotifyMainBackendJob::dispatch($payment->order_id, 'confirmed', 'astu');
         }
         return [
             'success'          => $success,

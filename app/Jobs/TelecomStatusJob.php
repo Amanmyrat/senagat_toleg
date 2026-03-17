@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\NotifyMainBackendJob;
 
 class TelecomStatusJob implements ShouldQueue
 {
@@ -55,6 +56,7 @@ class TelecomStatusJob implements ShouldQueue
             ]);
 
             $this->payment->update(['status' => 'failed']);
+            NotifyMainBackendJob::dispatch($this->payment->order_id, 'failed', 'telecom');
             return;
         }
 
@@ -65,6 +67,7 @@ class TelecomStatusJob implements ShouldQueue
                 ]);
 
                 $this->payment->update(['status' => 'failed']);
+                NotifyMainBackendJob::dispatch($this->payment->order_id, 'failed', 'telecom');
                 return;
             }
 
@@ -116,7 +119,7 @@ class TelecomStatusJob implements ShouldQueue
                 'result'     => $result,
                 'txn_id'     => $txnId,
             ]);
-
+            NotifyMainBackendJob::dispatch($this->payment->order_id, 'confirmed', 'telecom');
             return;
         }
 
@@ -133,7 +136,7 @@ class TelecomStatusJob implements ShouldQueue
                 'result'     => $result,
                 'txn_id'     => $txnId,
             ]);
-
+            NotifyMainBackendJob::dispatch($this->payment->order_id, 'failed', 'telecom');
             return;
         }
 

@@ -3,6 +3,7 @@
 namespace App\Services\TmCell;
 
 use App\Helpers\MoneyHelper;
+use App\Jobs\NotifyMainBackendJob;
 use App\Models\Payment;
 
 class TmCellService
@@ -130,6 +131,7 @@ class TmCellService
                 'status' => 'confirmed',
                 'extras' => $extras,
             ]);
+            NotifyMainBackendJob::dispatch($payment->order_id, 'confirmed', 'tmcell');
         }
 
         return [
