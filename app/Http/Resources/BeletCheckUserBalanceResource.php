@@ -20,7 +20,7 @@ class BeletCheckUserBalanceResource extends JsonResource
         return [
             'success' => true,
             'data' => [
-                'balance' => $data['balance_in_manats'] ?? 0,
+                'balance' => number_format((float) ($data['balance_in_manats'] ?? 0), 2, '.', ''),
                 'max_possible_amount' => $data['max_possible_amount'] ?? 0,
             ]
         ];
