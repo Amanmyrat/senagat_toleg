@@ -45,6 +45,6 @@ class CharityController extends Controller
         $orderId = $request->validated()['orderId'];
         $response = $this->charityService->checkPaymentStatus($orderId);
 
-        return response()->json($response);
+        return new JsonResponse($response);
     }
 }

@@ -13,7 +13,6 @@ Route::prefix('v1')->group(function () {
         Route::get('balances', [BeletController::class, 'balances']);
         Route::post('top-up', [BeletController::class, 'topUp']);
         Route::post('confirm', [BeletController::class, 'confirm']);
-        Route::post('/check-phone', [BeletController::class, 'checkPhone']);
         Route::get('checkBalance', [BeletController::class, 'checkBalance']);
         //        Route::get('/orders/{id}/status', [BeletController::class, 'status']);
     });
