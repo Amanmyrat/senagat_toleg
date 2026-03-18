@@ -12,8 +12,9 @@
         "laravel/sanctum": "^4.2",
         "laravel/telescope": "^5.16",
         "laravel/tinker": "^2.10.1",
-      "ext-simplexml": "*",
-        "ext-libxml": "*"
+        "ext-simplexml": "*",
+        "ext-libxml": "*",
+        "ext-curl": "*"
     },
     "require-dev": {
         "dedoc/scramble": "^0.13.8",

@@ -37,7 +37,18 @@ class TmCellClient
         ]);
 
         try {
-            $response = Http::timeout(10)->get($url);
+            $response = Http::withOptions([
+                'curl' => [
+                    CURLOPT_SSL_CIPHER_LIST => 'DEFAULT@SECLEVEL=0',
+                    CURLOPT_SSLCERT         => config('services.tmcell.pfx_path'),
+                    CURLOPT_SSLCERTPASSWD   => config('services.tmcell.pfx_password'),
+                    CURLOPT_SSLCERTTYPE     => 'P12',
+
+                    // Disable verification for their internal/expired certificate
+                    CURLOPT_SSL_VERIFYPEER  => false,
+                    CURLOPT_SSL_VERIFYHOST  => false,
+                ],
+            ])->timeout(10)->get($url);
 
             Log::channel('tmcell')->info('TmCell getBalance response', [
                 'status' => $response->status(),
@@ -46,6 +57,7 @@ class TmCellClient
 
             return $this->parseXml($response->body());
 
+//            $response = Http::timeout(10)->get($url);
         } catch (ConnectionException $e) {
             Log::channel('tmcell')->error('TmCell getBalance connection error', [
                 'message' => $e->getMessage(),
