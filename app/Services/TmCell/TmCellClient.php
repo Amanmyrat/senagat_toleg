@@ -18,7 +18,19 @@ class TmCellClient
         $this->baseUrl = rtrim(config('services.tmcell.base_url'), '/');
         $this->psId    = config('services.tmcell.ps_id');
     }
-
+    private function sslOptions(): array
+    {
+        return [
+            'curl' => [
+                CURLOPT_SSL_CIPHER_LIST => 'DEFAULT@SECLEVEL=0',
+                CURLOPT_SSLCERT         => config('services.tmcell.pfx_path'),
+                CURLOPT_SSLCERTPASSWD   => config('services.tmcell.pfx_password'),
+                CURLOPT_SSLCERTTYPE     => 'P12',
+                CURLOPT_SSL_VERIFYPEER  => false,
+                CURLOPT_SSL_VERIFYHOST  => false,
+            ],
+        ];
+    }
     /**
      * Check Balance
      * GET Balance?ps_id=<ps_id>&phone=<phone>&currency=TMT
@@ -37,18 +49,7 @@ class TmCellClient
         ]);
 
         try {
-            $response = Http::withOptions([
-                'curl' => [
-                    CURLOPT_SSL_CIPHER_LIST => 'DEFAULT@SECLEVEL=0',
-                    CURLOPT_SSLCERT         => config('services.tmcell.pfx_path'),
-                    CURLOPT_SSLCERTPASSWD   => config('services.tmcell.pfx_password'),
-                    CURLOPT_SSLCERTTYPE     => 'P12',
-
-                    // Disable verification for their internal/expired certificate
-                    CURLOPT_SSL_VERIFYPEER  => false,
-                    CURLOPT_SSL_VERIFYHOST  => false,
-                ],
-            ])->timeout(10)->get($url);
+            $response = Http::withOptions($this->sslOptions())->timeout(10)->get($url);
 
             Log::channel('tmcell')->info('TmCell getBalance response', [
                 'status' => $response->status(),
@@ -93,7 +94,7 @@ class TmCellClient
         ]);
 
         try {
-            $response = Http::timeout(10)->get($url);
+            $response = Http::withOptions($this->sslOptions())->timeout(10)->get($url);
 
             Log::channel('tmcell')->info('TmCell paymentPreCheck response', [
                 'status' => $response->status(),
@@ -148,7 +149,7 @@ class TmCellClient
             'time'   => $time,
         ]);
         try {
-            $response = Http::timeout(10)->get($url);
+            $response = Http::withOptions($this->sslOptions())->timeout(10)->get($url);
 
             Log::channel('tmcell')->info('TmCell makePayment response', [
                 'status' => $response->status(),
