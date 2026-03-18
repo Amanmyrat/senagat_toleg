@@ -26,5 +26,8 @@ enum ErrorMessage: string
     case TYPE_REQUIRED = 'type_is_required.';
     case TYPE_INVALID = 'invalid_service_type.';
     case NO_INTERNET_CONNECTION ='no_internet_connection';
+    case INVALID_PHONE = 'invalid_phone_number';
+    case USER_NOT_FOUND = 'user_not_found';
+    case INTERNAL_ERROR = 'internal_server_error';
 
 }
