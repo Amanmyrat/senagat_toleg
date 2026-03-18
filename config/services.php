@@ -40,15 +40,17 @@ return [
     ],
     'astu' => [
         'url' => env('ASTU_BASE_URL'),
-        'ip'  => env('ASTU_IP', '127.0.0.1'),
+        'ip' => env('ASTU_IP', '127.0.0.1'),
     ],
     'tmcell' => [
-     'base_url' => env('TMCELL_BASE_URL'),
-     'ps_id'    => env('TMCELL_PS_ID'),
+        'base_url' => env('TMCELL_BASE_URL'),
+        'ps_id' => env('TMCELL_PS_ID'),
+        'pfx_path' => storage_path(env('TMCELL_PFX_FILE')),
+        'pfx_password' => env('TMCELL_PFX_PASSWORD'),
     ],
 
     'senagat_back' => [
-        'webhook_url'    => env('SENAGAT_BACK_WEBHOOK_URL'),
+        'webhook_url' => env('SENAGAT_BACK_WEBHOOK_URL'),
         'webhook_secret' => env('SENAGAT_BACK_WEBHOOK_SECRET'),
     ],
 ];
