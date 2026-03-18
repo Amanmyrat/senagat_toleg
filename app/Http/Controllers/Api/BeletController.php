@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enum\ErrorMessage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BalanceConfirmRequest;
 use App\Http\Requests\BeletBalanceTopUpRequest;
 use App\Http\Requests\BeletCheckPhoneRequest;
+use App\Http\Resources\BeletCheckUserBalanceResource;
 use App\Http\Resources\BeletConfirmResource;
 use App\Services\Belet\BeletBalanceService;
 use App\Services\Belet\BeletBankService;
@@ -84,18 +86,7 @@ class BeletController extends Controller
         return new BeletConfirmResource($result);
     }
 
-    /**
-     * Check User
-     *
-     * @unauthenticated
-     */
-    public function checkPhone(BeletCheckPhoneRequest $request, BeletUserService $belet)
-    {
-        $phone = $request->input('phone');
-        $result = $belet->checkPhone($phone);
 
-        return new JsonResponse($result);
-    }
 
     /**
      * Check User Balance
@@ -106,7 +97,14 @@ class BeletController extends Controller
     {
         $phone = $request->input('phone');
         $result = $belet->checkBalance($phone);
-
-        return new JsonResponse($result);
+        if (empty($result['data'])) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => [
+                    'message' => ErrorMessage::USER_NOT_FOUND
+                ]
+            ], 400);
+        }
+        return new BeletCheckUserBalanceResource($result['data']);
     }
 }
