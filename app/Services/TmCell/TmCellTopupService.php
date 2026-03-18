@@ -2,6 +2,7 @@
 
 namespace App\Services\TmCell;
 
+use App\Enum\ErrorMessage;
 use App\Helpers\MoneyHelper;
 use App\Jobs\TmCellStatusJob;
 use App\Models\Payment;
@@ -19,19 +20,19 @@ class TmCellTopupService
 
     public function create(array $payload): array
     {
-//        $preCheck = $this->tmCellService->paymentPreCheck($payload['phone']);
-//
-//        if (! $preCheck['success']) {
-//            Log::channel('tmcell')->warning('TmCell paymentPreCheck failed', [
-//                'phone' => $payload['phone'],
-//                'error' => $preCheck['error'] ?? null,
-//            ]);
-//
-//            return $this->error(
-//                422,
-//                $preCheck['error']['message'] ?? 'Phone number not found or invalid'
-//            );
-//        }
+        $preCheck = $this->tmCellService->paymentPreCheck($payload['phone']);
+
+        if (! $preCheck['success']) {
+            Log::channel('tmcell')->warning('TmCell paymentPreCheck failed', [
+                'phone' => $payload['phone'],
+                'error' => $preCheck['error'] ?? null,
+            ]);
+
+            return $this->error(
+                422,
+                $preCheck['error']['message'] ?? ErrorMessage::INVALID_PHONE
+            );
+        }
 
         $bankId = $this->bankResolver->resolveIdByName($payload['bank_name']);
 

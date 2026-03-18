@@ -35,7 +35,7 @@ Route::prefix('v1')->group(function () {
         Route::post('balance', [AstuController::class, 'balance']);
     });
     //TMCELL CRUD
-    Route::prefix('tm_cell')->group(function () {
+    Route::prefix('tmcell')->group(function () {
 
         // Balance check
         Route::get('balance', [TmCellController::class, 'balance']);
