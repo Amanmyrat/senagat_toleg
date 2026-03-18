@@ -15,7 +15,7 @@ class TmCellController extends Controller
         protected TmCellService $tmCellService
     ) {}
     /**
-     * Telecom Pay
+     * Tm Cell Pay
      *
      * @unauthenticated
      */
