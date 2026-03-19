@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AstuController;
 use App\Http\Controllers\Api\BeletController;
+use App\Http\Controllers\Api\CdmaController;
 use App\Http\Controllers\Api\CharityController;
 use App\Http\Controllers\Api\TelecomController;
 use App\Http\Controllers\Api\TmCellController;
@@ -41,5 +42,12 @@ Route::prefix('v1')->group(function () {
         Route::get('balance', [TmCellController::class, 'balance']);
         // Payment
         Route::post('pay', [TmCellController::class, 'store']);
+    });
+
+    // CDMA CRUD
+    Route::prefix('cdma')->group(function () {
+
+    Route::post('/cdma/pay', [CdmaController::class, 'store']);
+    Route::get('/cdma/balance', [CdmaController::class, 'balance']);
     });
 });

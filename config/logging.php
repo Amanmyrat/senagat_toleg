@@ -153,6 +153,12 @@ return [
             'level' => 'info',
             'days' => 60,
         ],
+        'cdma' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/cdma/cdma.log'),
+            'level' => 'info',
+            'days' => 60,
+        ],
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],

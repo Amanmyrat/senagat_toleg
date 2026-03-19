@@ -87,7 +87,7 @@ class SenagatGateway implements PaymentGateway
             'password' => $this->credentials['password'],
             'orderId' => $orderId,
         ];
-        Log::info('checkPaymentStatus debug', [
+        Log::channel('tmcell')->info('checkPaymentStatus debug', [
             'bankKey'   => $this->bankKey,
             'service'   => $this->service,
             'userName'  => $this->credentials['userName'],
