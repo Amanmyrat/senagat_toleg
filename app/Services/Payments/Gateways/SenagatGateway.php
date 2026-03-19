@@ -87,7 +87,13 @@ class SenagatGateway implements PaymentGateway
             'password' => $this->credentials['password'],
             'orderId' => $orderId,
         ];
-
+        Log::info('checkPaymentStatus debug', [
+            'bankKey'   => $this->bankKey,
+            'service'   => $this->service,
+            'userName'  => $this->credentials['userName'],
+            'url'       => $this->config['base_url'] . $this->config['status_endpoint'],
+            'orderId'   => $orderId,
+        ]);
         try {
             $response = Http::asForm()->post($this->config['base_url'].$this->config['status_endpoint'], $formData)->json();
             if (isset($response['ErrorCode']) && $response['ErrorCode'] != 0) {
