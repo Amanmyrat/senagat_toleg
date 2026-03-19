@@ -23,7 +23,7 @@ class CdmaClient
     {
         return [
             'curl' => [
-                CURLOPT_SSLCERT         => config('services.cdma.pfx_path'),
+                CURLOPT_SSLCERT         => config('services.cdma.pfx_username'),
                 CURLOPT_SSLCERTPASSWD   => config('services.cdma.pfx_password'),
                 CURLOPT_SSLCERTTYPE     => 'P12',
                 CURLOPT_SSL_VERIFYPEER  => false,
