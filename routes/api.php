@@ -47,7 +47,7 @@ Route::prefix('v1')->group(function () {
     // CDMA CRUD
     Route::prefix('cdma')->group(function () {
 
-    Route::post('/cdma/pay', [CdmaController::class, 'store']);
-    Route::get('/cdma/balance', [CdmaController::class, 'balance']);
+    Route::post('/pay', [CdmaController::class, 'store']);
+    Route::get('/balance', [CdmaController::class, 'balance']);
     });
 });
