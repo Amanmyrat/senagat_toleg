@@ -1,38 +1,38 @@
 <?php
 
-namespace App\Services\TmCell;
+namespace App\Services\Cdma;
 
 use App\Enum\ErrorMessage;
 use App\Helpers\MoneyHelper;
-use App\Jobs\TmCellStatusJob;
+use App\Jobs\CdmaStatusJob;
 use App\Models\Payment;
 use App\Services\BankResolverService;
 use App\Services\Payments\PaymentGatewayResolver;
 use Illuminate\Support\Facades\Log;
 
-class TmCellTopupService
+class CdmaTopupService
 {
     public function __construct(
         protected BankResolverService    $bankResolver,
         protected PaymentGatewayResolver $gatewayResolver,
-        protected TmCellService          $tmCellService,
+        protected CdmaService            $cdmaService,
     ) {}
 
     public function create(array $payload): array
     {
-//        $preCheck = $this->tmCellService->paymentPreCheck($payload['phone']);
-//
-//        if (! $preCheck['success']) {
-//            Log::channel('tmcell')->warning('TmCell paymentPreCheck failed', [
-//                'phone' => $payload['phone'],
-//                'error' => $preCheck['error'] ?? null,
-//            ]);
-//
-//            return $this->error(
-//                422,
-//                $preCheck['error']['message'] ?? ErrorMessage::INVALID_PHONE
-//            );
-//        }
+        $preCheck = $this->cdmaService->paymentPreCheck($payload['phone']);
+
+        if (! $preCheck['success']) {
+            Log::channel('cdma')->warning('Cdma paymentPreCheck failed', [
+                'phone' => $payload['phone'],
+                'error' => $preCheck['error'] ?? null,
+            ]);
+
+            return $this->error(
+                422,
+                $preCheck['error']['message'] ?? ErrorMessage::INVALID_PHONE
+            );
+        }
 
         $bankId = $this->bankResolver->resolveIdByName($payload['bank_name']);
 
@@ -45,7 +45,7 @@ class TmCellTopupService
         $bankKey   = strtolower($payload['bank_name']);
 
         $payment = Payment::create([
-            'type'           => 'tmcell',
+            'type'           => 'cdma',
             'bank_id'        => $bankId,
             'bank_key'       => $bankKey,
             'amount'         => $amountInt,
@@ -56,7 +56,7 @@ class TmCellTopupService
             'status'         => 'pending',
         ]);
 
-        Log::channel('tmcell')->info('TmCell payment created', [
+        Log::channel('cdma')->info('Cdma payment created', [
             'payment_id' => $payment->id,
             'pay_id'     => $payment->pay_id,
             'phone'      => $payload['phone'],
@@ -66,13 +66,13 @@ class TmCellTopupService
 
         $gateway = $this->gatewayResolver->resolve(
             $payload['bank_name'],
-            'tmcell',
+            'cdma',
         );
 
         $response = $gateway->createPayment([
             'order_number' => $payment->pay_id,
             'amount'       => $payment->amount,
-            'description'  => 'TmCell payment',
+            'description'  => 'CDMA payment',
         ]);
 
         if (! empty($response['error'])) {
@@ -80,7 +80,7 @@ class TmCellTopupService
 
             return $this->error(
                 $response['error']['code'] ?? 500,
-                $response['error']['message'] ?? 'Gateway_error'
+                $response['error']['message'] ?? 'Gateway error'
             );
         }
 
@@ -88,7 +88,9 @@ class TmCellTopupService
             'order_id' => $response['orderId'] ?? null,
             'status'   => 'pending',
         ]);
-        TmCellStatusJob::dispatch($payment)->delay(now()->addSeconds(30));
+
+        CdmaStatusJob::dispatch($payment)->delay(now()->addSeconds(30));
+
         return [
             'success' => true,
             'data'    => $response,
@@ -110,7 +112,7 @@ class TmCellTopupService
     protected function generateUniqueOrderId(): string
     {
         do {
-            $orderId = 'TC' . now()->format('YmdH') . rand(1000, 9999);
+            $orderId = 'CD' . now()->format('YmdH') . rand(1000, 9999);
         } while (Payment::where('pay_id', $orderId)->exists());
 
         return $orderId;
