@@ -48,6 +48,12 @@ return [
         'pfx_path' => storage_path(env('TMCELL_PFX_FILE')),
         'pfx_password' => env('TMCELL_PFX_PASSWORD'),
     ],
+    'cdma' => [
+        'base_url' => env('CDMA_BASE_URL'),
+        'ps_id' => env('CDMA_PS_ID'),
+        'pfx_path' => storage_path(env('CDMA_PFX_FILE')),
+        'pfx_password' => env('CDMA_PFX_PASSWORD'),
+    ],
 
     'senagat_back' => [
         'webhook_url' => env('SENAGAT_BACK_WEBHOOK_URL'),
