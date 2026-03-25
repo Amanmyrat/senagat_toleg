@@ -134,7 +134,7 @@ class CdmaClient
         string $time
     ): array {
         $url = sprintf(
-            '%s/Payment?ps_id=%s&rrn=%s&pt=2&date=%s&time=%s&phone=%s&amount=%s&currency=TMT',
+            '%s/xmlinterface.asmx/Payment?ps_id=%s&rrn=%s&pt=2&date=%s&time=%s&phone=%s&amount=%s&currency=TMT',
             $this->baseUrl,
             $this->psId,
             $rrn,
