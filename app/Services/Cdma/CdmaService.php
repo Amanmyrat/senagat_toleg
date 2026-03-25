@@ -5,6 +5,7 @@ namespace App\Services\Cdma;
 use App\Helpers\MoneyHelper;
 use App\Jobs\NotifyMainBackendJob;
 use App\Models\Payment;
+use Illuminate\Support\Facades\Log;
 
 class CdmaService
 {
@@ -87,14 +88,16 @@ class CdmaService
         $phone  = '993' . $payment->payment_target['value'];
         $rrn    = $payment->pay_id;
         $amount = (float) number_format(
-            MoneyHelper::intToDecimal($payment->amount),
-            2, '.', ''
+            MoneyHelper::intToDecimal($payment->amount)
         );
         $date = now()->format('Ymd');
         $time = now()->format('His');
 
         $response = $this->client->makePayment($rrn, $phone, $amount, $date, $time);
-
+        Log::channel('cdma')->info('Cdma makePayment response', [
+            'status' => $response['status'] ?? null,
+            'body'   => $response,
+        ]);
         if (isset($response['success']) && $response['success'] === false) {
             return [
                 'success' => false,
