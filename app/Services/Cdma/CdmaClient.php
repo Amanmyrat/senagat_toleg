@@ -29,6 +29,7 @@ class CdmaClient
                 CURLOPT_SSL_CIPHER_LIST => 'DEFAULT@SECLEVEL=0',
                 CURLOPT_SSL_VERIFYPEER  => false,
                 CURLOPT_SSL_VERIFYHOST  => false,
+                CURLOPT_SSLVERSION => CURL_SSLVERSION_TLSv1,
             ],
         ])->timeout(10);
     }
