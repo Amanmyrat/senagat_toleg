@@ -33,6 +33,20 @@ class CdmaClient
             ],
         ])->timeout(10);
     }
+    private function paymentClient()
+    {
+        return Http::withBasicAuth(
+            config('services.cdma.pfx_username'),
+            config('services.cdma.pfx_password')
+        )->withOptions([
+            'verify' => false,
+            'curl' => [
+                CURLOPT_SSL_CIPHER_LIST => 'DEFAULT@SECLEVEL=0',
+                CURLOPT_SSL_VERIFYPEER  => false,
+                CURLOPT_SSL_VERIFYHOST  => false,
+            ],
+        ])->timeout(10);
+    }
 
 
     /**
@@ -133,8 +147,11 @@ class CdmaClient
         string $date,
         string $time
     ): array {
+
+        Log::channel('cdma')->info('Using paymentClient for makePayment');
+
         $url = sprintf(
-            '%s/xmlinterface.asmx/Payment?ps_id=%s&rrn=%s&pt=2&date=%s&time=%s&phone=%s&amount=%s&currency=TMT',
+            '%s/Payment?ps_id=%s&rrn=%s&pt=2&date=%s&time=%s&phone=%s&amount=%s&currency=TMT',
             $this->baseUrl,
             $this->psId,
             $rrn,
@@ -153,7 +170,7 @@ class CdmaClient
         ]);
 
         try {
-            $response = $this->client()->get($url);
+            $response = $this->paymentClient()->get($url);
 
             Log::channel('cdma')->info('Cdma makePayment response', [
                 'status' => $response->status(),
