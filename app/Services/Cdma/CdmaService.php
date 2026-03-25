@@ -84,7 +84,7 @@ class CdmaService
 
     public function makePayment(Payment $payment): array
     {
-        $phone  = $payment->payment_target['value'];
+        $phone  = '993' . $payment->payment_target['value'];
         $rrn    = $payment->pay_id;
         $amount = (float) number_format(
             MoneyHelper::intToDecimal($payment->amount),
