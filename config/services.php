@@ -51,7 +51,7 @@ return [
     'cdma' => [
         'base_url' => env('CDMA_BASE_URL'),
         'ps_id' => env('CDMA_PS_ID'),
-        'pfx_username' => storage_path(env('CDMA_PFX_USERNAME')),
+        'pfx_username' => env('CDMA_PFX_USERNAME'),
         'pfx_password' => env('CDMA_PFX_PASSWORD'),
     ],
 

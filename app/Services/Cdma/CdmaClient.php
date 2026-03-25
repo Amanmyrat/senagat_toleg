@@ -19,19 +19,20 @@ class CdmaClient
         $this->psId    = config('services.cdma.ps_id');
     }
 
-    private function sslOptions(): array
+    private function client()
     {
-        return [
+        return Http::withBasicAuth(
+            config('services.cdma.pfx_username'),
+            config('services.cdma.pfx_password')
+        )->withOptions([
             'curl' => [
-                CURLOPT_SSLCERT         => config('services.cdma.pfx_username'),
-                CURLOPT_SSLCERTPASSWD   => config('services.cdma.pfx_password'),
-                CURLOPT_SSLCERTTYPE     => 'P12',
+                CURLOPT_SSL_CIPHER_LIST => 'DEFAULT@SECLEVEL=0',
                 CURLOPT_SSL_VERIFYPEER  => false,
                 CURLOPT_SSL_VERIFYHOST  => false,
-
             ],
-        ];
+        ])->timeout(10);
     }
+
 
     /**
      * Check Balance
@@ -51,7 +52,7 @@ class CdmaClient
         ]);
 
         try {
-            $response = Http::withOptions($this->sslOptions())->timeout(10)->get($url);
+            $response = $this->client()->get($url);
 
             Log::channel('cdma')->info('Cdma getBalance response', [
                 'status' => $response->status(),
@@ -95,8 +96,7 @@ class CdmaClient
         ]);
 
         try {
-            $response = Http::withOptions($this->sslOptions())->timeout(10)->get($url);
-
+            $response = $this->client()->get($url);
             Log::channel('cdma')->info('Cdma paymentPreCheck response', [
                 'status' => $response->status(),
                 'body'   => $response->body(),
@@ -152,7 +152,7 @@ class CdmaClient
         ]);
 
         try {
-            $response = Http::withOptions($this->sslOptions())->timeout(10)->get($url);
+            $response = $this->client()->get($url);
 
             Log::channel('cdma')->info('Cdma makePayment response', [
                 'status' => $response->status(),
