@@ -44,7 +44,7 @@ class CdmaService
             'success' => true,
             'data'    => [
                 'phone'    => $phone,
-                'balance'  => $response['balance'] ?? null,
+                'balance'  => $response['amount'] ?? null,
                 'currency' => $response['currency'] ?? 'TMT',
             ],
         ];

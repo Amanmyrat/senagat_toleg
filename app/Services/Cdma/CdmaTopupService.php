@@ -2,7 +2,6 @@
 
 namespace App\Services\Cdma;
 
-use App\Enum\ErrorMessage;
 use App\Helpers\MoneyHelper;
 use App\Jobs\CdmaStatusJob;
 use App\Models\Payment;
@@ -20,19 +19,19 @@ class CdmaTopupService
 
     public function create(array $payload): array
     {
-        $preCheck = $this->cdmaService->paymentPreCheck($payload['phone']);
-
-        if (! $preCheck['success']) {
-            Log::channel('cdma')->warning('Cdma paymentPreCheck failed', [
-                'phone' => $payload['phone'],
-                'error' => $preCheck['error'] ?? null,
-            ]);
-
-            return $this->error(
-                422,
-                $preCheck['error']['message'] ?? ErrorMessage::INVALID_PHONE
-            );
-        }
+//        $preCheck = $this->cdmaService->paymentPreCheck($payload['phone']);
+//
+//        if (! $preCheck['success']) {
+//            Log::channel('cdma')->warning('Cdma paymentPreCheck failed', [
+//                'phone' => $payload['phone'],
+//                'error' => $preCheck['error'] ?? null,
+//            ]);
+//
+//            return $this->error(
+//                422,
+//                $preCheck['error']['message'] ?? ErrorMessage::INVALID_PHONE
+//            );
+//        }
 
         $bankId = $this->bankResolver->resolveIdByName($payload['bank_name']);
 
