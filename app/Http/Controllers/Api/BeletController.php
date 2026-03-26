@@ -100,9 +100,7 @@ class BeletController extends Controller
         if (empty($result['data'])) {
             return new JsonResponse([
                 'success' => false,
-                'error' => [
-                    'message' => ErrorMessage::USER_NOT_FOUND
-                ]
+                'message' => ErrorMessage::USER_NOT_FOUND
             ], 400);
         }
         return new BeletCheckUserBalanceResource($result['data']);
