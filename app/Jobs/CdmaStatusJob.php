@@ -51,7 +51,6 @@ class CdmaStatusJob implements ShouldQueue
                 'attempt'      => $this->attempts(),
             ]);
 
-            // Banka reddetti
             if ($errorCode !== '0' && $errorCode !== '') {
                 Log::channel('cdma')->warning('Bank rejected payment', [
                     'payment_id' => $payment->id,
@@ -62,7 +61,6 @@ class CdmaStatusJob implements ShouldQueue
                 return;
             }
 
-            // Banka henüz onaylamamış
             if ($orderStatus !== 2) {
                 if ($this->attempts() >= $this->tries) {
                     Log::channel('cdma')->error('Bank status max attempts reached', [
@@ -77,7 +75,6 @@ class CdmaStatusJob implements ShouldQueue
                 return;
             }
 
-            // Banka onayladı → CDMA API'ye makePayment
             $result = $cdmaService->makePayment($payment);
 
             Log::channel('cdma')->info('Cdma makePayment result', [
