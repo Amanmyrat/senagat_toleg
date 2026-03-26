@@ -33,20 +33,7 @@ class CdmaClient
             ],
         ])->timeout(10);
     }
-    private function paymentClient()
-    {
-        return Http::withBasicAuth(
-            config('services.cdma.pfx_username'),
-            config('services.cdma.pfx_password')
-        )->withOptions([
-            'verify' => false,
-            'curl' => [
-                CURLOPT_SSL_CIPHER_LIST => 'DEFAULT@SECLEVEL=0',
-                CURLOPT_SSL_VERIFYPEER  => false,
-                CURLOPT_SSL_VERIFYHOST  => false,
-            ],
-        ])->timeout(10);
-    }
+
 
 
     /**
@@ -170,7 +157,7 @@ class CdmaClient
         ]);
 
         try {
-            $response = $this->paymentClient()->get($url);
+            $response = $this->client()->get($url);
 
             Log::channel('cdma')->info('Cdma makePayment response', [
                 'status' => $response->status(),
