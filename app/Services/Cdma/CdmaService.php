@@ -87,14 +87,17 @@ class CdmaService
     {
         $phone  = '993' . $payment->payment_target['value'];
         $rrn    = $payment->pay_id;
-        $amount = (float) number_format(
-            MoneyHelper::intToDecimal($payment->amount)
-        );
+        $amount = MoneyHelper::intToDecimal($payment->amount);
         $date = now()->format('Ymd');
         $time = now()->format('His');
 
         $response = $this->client->makePayment($rrn, $phone, $amount, $date, $time);
-        Log::channel('cdma')->info('Cdma makePayment response', [
+        Log::channel('cdma')->info('makePayment params', [
+            'phone'  => $phone,
+            'amount' => $amount,
+            'rrn'    => $rrn,
+        ]);
+        Log::channel('cdma')->info('Cdma makePayment response send', [
             'status' => $response['status'] ?? null,
             'body'   => $response,
         ]);
