@@ -33,13 +33,28 @@ class CdmaClient
             ],
         ])->timeout(10);
     }
-
+    private function logRequest(string $method, string $url): void
+    {
+        Log::channel('cdma')->info('CDMA Request', [
+            'method'   => $method,
+            'url'      => $url,
+            'username' => config('services.cdma.pfx_username'),
+            'password' => config('services.cdma.pfx_password'),
+            'curl_equivalent' => sprintf(
+                'curl -k --ciphers "DEFAULT@SECLEVEL=0" -u "%s:%s" "%s"',
+                config('services.cdma.pfx_username'),
+                config('services.cdma.pfx_password'),
+                $url
+            ),
+        ]);
+    }
 
 
     /**
      * Check Balance
      * GET Balance?ps_id=<ps_id>&phone=<phone>&currency=TMT
      */
+
     public function getBalance(string $phone): array
     {
         $url = sprintf(
@@ -52,7 +67,7 @@ class CdmaClient
         Log::channel('cdma')->info('Cdma getBalance request', [
             'phone' => $phone,
         ]);
-
+        $this->logRequest('getBalance', $url);
         try {
             $response = $this->client()->get($url);
 
@@ -147,7 +162,7 @@ class CdmaClient
             $phone,
             number_format($amount, 2, '.', '')
         );
-
+        $this->logRequest('makePayment', $url);
         Log::channel('cdma')->info('Cdma makePayment request', [
             'rrn'    => $rrn,
             'phone'  => $phone,

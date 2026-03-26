@@ -16,8 +16,8 @@ class CdmaStatusJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $tries   = 15;
-    public int $backoff = 20;
+    public int $tries   = 30;
+    public int $backoff = 10;
 
     public function __construct(
         public Payment $payment
