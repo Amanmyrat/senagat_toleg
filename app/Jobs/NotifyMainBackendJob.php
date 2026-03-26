@@ -14,8 +14,8 @@ class NotifyMainBackendJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $tries = 5;
-    public int $backoff = 60;
+    public int $tries = 10;
+    public int $backoff = 30;
 
     public function __construct(
         public string $externalId,
