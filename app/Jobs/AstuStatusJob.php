@@ -86,7 +86,7 @@ class AstuStatusJob implements ShouldQueue
             Log::channel('astu')->info('Astu updateBalance result', [
                 'payment_id' => $payment->id,
                 'success' => $result['success'],
-                'result' => $result['result'],
+                'result' => $result['result']?? 'unknown',
                 'receipt' => $result['receipt'] ?? null,
                 'user_notification' => $result['user_notification'] ?? null,
                 'attempt' => $this->attempts(),

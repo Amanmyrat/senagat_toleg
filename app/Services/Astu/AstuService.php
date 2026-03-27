@@ -66,8 +66,7 @@ class AstuService
     {
         $type    = $payment->payment_target['type'] ?? 'phone';
         $account = $payment->payment_target['value'];
-        $agrmNum = $this->formatPhoneNumber($account, $type);
-
+        $agrmNum = $payment->payment_target['agrm_num'] ?? $this->formatPhoneNumber($account, $type);
         $receiptNum  = $payment->pay_id;
         $receiptDate = now()->format('YmdHis');
         $amount      = (float) number_format(
