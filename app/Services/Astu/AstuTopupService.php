@@ -14,10 +14,18 @@ class AstuTopupService
     public function __construct(
         protected BankResolverService $bankResolver,
         protected PaymentGatewayResolver $gatewayResolver,
+        protected AstuService $astuService,
     ) {}
 
     public function create(array $payload): array
     {
+        $balanceCheck = $this->astuService->getBalance($payload['account'], $payload['type']);
+        if (! $balanceCheck['success']) {
+            return $this->error(422, $balanceCheck['error']['message'] ?? 'Account not found');
+        }
+
+        $agrmNum = $balanceCheck['data']['number'];
+
         $bankId = $this->bankResolver->resolveIdByName($payload['bank_name']);
 
         if (! $bankId) {
@@ -37,6 +45,7 @@ class AstuTopupService
             'payment_target' => [
                 'type' => $payload['type'],
                 'value' => $payload['account'],
+                'agrm_num' => $agrmNum,
             ],
             'status' => 'pending',
         ]);
