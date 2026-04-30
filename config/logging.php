@@ -159,6 +159,12 @@ return [
             'level' => 'info',
             'days' => 60,
         ],
+        'alemtv' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/alemtv/alemtv.log'),
+            'level' => 'info',
+            'days' => 60,
+        ],
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
