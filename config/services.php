@@ -42,6 +42,12 @@ return [
         'url' => env('ASTU_BASE_URL'),
         'ip' => env('ASTU_IP', '127.0.0.1'),
     ],
+    'alemtv' => [
+        'base_url' => env('ALEMTV_BASE_URL'),
+        'aid' => env('ALEMTV_AID'),
+        'token' =>env('ALEMTV_AUTH_TOKEN'),
+        'timeout'  => 20,
+    ],
     'tmcell' => [
         'base_url' => env('TMCELL_BASE_URL'),
         'ps_id' => env('TMCELL_PS_ID'),

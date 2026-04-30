@@ -90,6 +90,11 @@ return [
             'password' => env('SENAGAT_CDMA_PASSWORD'),
             'return_url' => env('SENAGAT_RETURN_URL'),
         ],
+        'alemtv'=>[
+            'userName' => env('SENAGAT_ALEMTV_USERNAME'),
+            'password' => env('SENAGAT_ALEMTV_PASSWORD'),
+            'return_url' => env('SENAGAT_RETURN_URL'),
+        ],
         'astu' => [
             'iptv' => [
                 'userName' => env('SENAGAT_ASTU_IPTV_USERNAME'),
@@ -141,6 +146,11 @@ return [
             'password' => env('HALK_BANK_CDMA_PASSWORD'),
             'return_url' => env('HALK_BANK_RETURN_URL'),
         ],
+        'alemtv'=>[
+            'userName' => env('HALK_BANK_ALEMTV_USERNAME'),
+            'password' => env('HALK_BANK_ALEMTV_PASSWORD'),
+            'return_url' => env('HALK_BANK_RETURN_URL'),
+        ],
         'astu' => [
             'iptv' => [
                 'userName' => env('HALK_BANK_ASTU_IPTV_USERNAME'),
@@ -190,6 +200,11 @@ return [
         'cdma'=>[
             'userName' => env('RYSGAL_BANK_CDMA_USERNAME'),
             'password' => env('RYSGAL_BANK_CDMA_PASSWORD'),
+            'return_url' => env('RYSGAL_BANK_RETURN_URL'),
+        ],
+        'alemtv'=>[
+            'userName' => env('RYSGAL_ALEMTV_USERNAME'),
+            'password' => env('RYSGAL_BANK_ALEMTV_PASSWORD'),
             'return_url' => env('RYSGAL_BANK_RETURN_URL'),
         ],
         'astu' => [

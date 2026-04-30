@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AlemTvController;
 use App\Http\Controllers\Api\AstuController;
 use App\Http\Controllers\Api\BeletController;
 use App\Http\Controllers\Api\CdmaController;
@@ -49,5 +50,14 @@ Route::prefix('v1')->group(function () {
 
     Route::post('/pay', [CdmaController::class, 'store']);
     Route::get('/balance', [CdmaController::class, 'balance']);
+    });
+    //ALEM TV CRUD
+
+    Route::prefix('alemTv')->group(function () {
+
+        Route::get('/tarifs', [AlemTvController::class, 'index']);
+        Route::get('/search', [AlemTvController::class, 'search']);
+        Route::post('create', [AlemTvController::class, 'create']);
+        Route::post('topup',  [AlemTvController::class, 'topup']);
     });
 });
