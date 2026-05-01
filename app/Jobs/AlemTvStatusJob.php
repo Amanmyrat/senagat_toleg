@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Payment;
-use App\Services\AlemTv\AlemTvTarifClient;
+use App\Services\AlemTv\AlemTvCreateService;
 use App\Services\Payments\PaymentGatewayResolver;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -19,25 +19,37 @@ class AlemTvStatusJob implements ShouldQueue
     public int $tries   = 30;
     public int $backoff = 10;
 
-    private int $maxCompleteAttempts = 10;
+    private int $maxCompleteAttempts = 5;
 
     public function __construct(
         public Payment $payment,
         public int     $completeAttempts = 0,
+        public bool    $skipBankCheck = false,
     ) {}
 
     public function handle(
         PaymentGatewayResolver $gatewayResolver,
-        AlemTvTarifClient      $tarifClient,
+        AlemTvCreateService    $createService,
     ): void {
         try {
             $payment = $this->payment->fresh();
+
+            if (in_array($payment->status, ['confirmed', 'failed'])) {
+                Log::channel('alemtv')->info("Payment already {$payment->status}, skipping", [
+                    'payment_id' => $payment->id,
+                ]);
+                return;
+            }
 
             if (! $payment->order_id) {
                 Log::channel('alemtv')->warning('order_id is null, releasing', [
                     'payment_id' => $payment->id,
                 ]);
                 $this->release(30);
+                return;
+            }
+            if ($this->skipBankCheck) {
+                $this->runCreate($payment, $createService);
                 return;
             }
 
@@ -81,7 +93,7 @@ class AlemTvStatusJob implements ShouldQueue
                 return;
             }
 
-            $this->handleComplete($payment, $tarifClient);
+            $this->runCreate($payment, $createService);
 
         } catch (\Throwable $e) {
             Log::channel('alemtv')->error('AlemTvStatusJob failed: ' . $e->getMessage(), [
@@ -92,26 +104,30 @@ class AlemTvStatusJob implements ShouldQueue
         }
     }
 
-    private function handleComplete(Payment $payment, AlemTvTarifClient $tarifClient): void
+    private function runCreate(Payment $payment, AlemTvCreateService $createService): void
     {
-        $completeResult = $tarifClient->completeOrder((int) $payment->order_id);
+        $result = $createService->create([
+            'type'    => $payment->payment_target['type'],
+            'subject' => $payment->payment_target['subject'],
+            'tarif'   => $payment->payment_target['tarif'],
+            'period'  => (int) $payment->payment_target['period'],
+        ]);
 
-        Log::channel('alemtv')->info('AlemTv completeOrder result', [
+        Log::channel('alemtv')->info('AlemTv create result', [
             'payment_id'        => $payment->id,
-            'success'           => $completeResult['success'],
-            'data'              => $completeResult['data']  ?? null,
-            'error'             => $completeResult['error'] ?? null,
+            'success'           => $result['success'],
+            'data'              => $result['data']  ?? null,
+            'error'             => $result['error'] ?? null,
             'complete_attempts' => $this->completeAttempts + 1,
         ]);
 
-        if ($completeResult['success'] && ($completeResult['data']['status'] ?? false) === true) {
+        if ($result['success']) {
             $this->markConfirmed($payment);
             return;
         }
 
-        $statusCode = $completeResult['data']['statusCode'] ?? null;
-        if ($statusCode === 302) {
-            Log::channel('alemtv')->info('AlemTv order already completed (302)', [
+        if (($result['error']['code'] ?? '') === 'already_paid') {
+            Log::channel('alemtv')->info('AlemTv already paid, marking confirmed', [
                 'payment_id' => $payment->id,
             ]);
             $this->markConfirmed($payment);
@@ -121,23 +137,24 @@ class AlemTvStatusJob implements ShouldQueue
         $newAttempts = $this->completeAttempts + 1;
 
         if ($newAttempts >= $this->maxCompleteAttempts) {
-            Log::channel('alemtv')->error('AlemTv completeOrder max attempts reached', [
+            Log::channel('alemtv')->error('AlemTv max attempts reached', [
                 'payment_id'        => $payment->id,
                 'complete_attempts' => $newAttempts,
-                'error'             => $completeResult['error'] ?? null,
+                'error'             => $result['error'] ?? null,
             ]);
             $payment->update(['status' => 'failed']);
             NotifyMainBackendJob::dispatch($payment->order_id, 'failed', 'alemtv');
             return;
         }
 
-        Log::channel('alemtv')->warning('AlemTv completeOrder failed, will retry', [
+        Log::channel('alemtv')->warning('AlemTv create failed, will retry', [
             'payment_id'        => $payment->id,
             'complete_attempts' => $newAttempts,
-            'error'             => $completeResult['error'] ?? null,
+            'error'             => $result['error'] ?? null,
         ]);
 
-        self::dispatch($payment, $newAttempts)->delay(now()->addSeconds(30));
+        self::dispatch($payment, $newAttempts, skipBankCheck: true)
+            ->delay(now()->addSeconds(30));
     }
 
     private function markConfirmed(Payment $payment): void
