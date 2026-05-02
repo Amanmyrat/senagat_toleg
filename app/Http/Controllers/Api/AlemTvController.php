@@ -55,12 +55,12 @@ class AlemTvController extends Controller
      *
      * @unauthenticated
      */
-    public function create(AlemTvCreateRequest $request): JsonResponse
-    {
-        return new JsonResponse(
-            $this->createService->create($request->validated())
-        );
-    }
+//    public function create(AlemTvCreateRequest $request): JsonResponse
+//    {
+//        return new JsonResponse(
+//            $this->createService->create($request->validated())
+//        );
+//    }
     /**
      * Alem Tv Top Up
      *
