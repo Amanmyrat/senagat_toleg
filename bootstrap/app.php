@@ -15,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
             \App\Http\Middleware\IpCheck::class,
         ]);
+        $middleware->alias([
+            'main.backend' => \App\Http\Middleware\VerifyMainBackendToken::class,
+        ]);
 
     })
     ->withExceptions(function (Exceptions $exceptions): void {

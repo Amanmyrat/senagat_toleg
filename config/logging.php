@@ -165,6 +165,12 @@ return [
             'level' => 'info',
             'days' => 60,
         ],
+        'senagatPayment' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/senagatPayment/senagatPayment.log'),
+            'level' => 'info',
+            'days' => 60,
+        ],
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
