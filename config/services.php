@@ -65,4 +65,8 @@ return [
         'webhook_url' => env('SENAGAT_BACK_WEBHOOK_URL'),
         'webhook_secret' => env('SENAGAT_BACK_WEBHOOK_SECRET'),
     ],
+
+    'main_backend' => [
+        'token' => env('MAIN_BACKEND_TOKEN'),
+    ],
 ];

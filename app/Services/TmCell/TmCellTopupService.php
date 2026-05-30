@@ -30,7 +30,7 @@ class TmCellTopupService
 
             return $this->error(
                 422,
-                $preCheck['error']['message'] ?? ErrorMessage::INVALID_PHONE
+                $preCheck['error']['message'] ?? ErrorMessage::INVALID_PHONE->value
             );
         }
 

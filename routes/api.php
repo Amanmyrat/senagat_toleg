@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\AstuController;
 use App\Http\Controllers\Api\BeletController;
 use App\Http\Controllers\Api\CdmaController;
 use App\Http\Controllers\Api\CharityController;
+use App\Http\Controllers\Api\MerchantController;
+use App\Http\Controllers\Api\SenagatPaymentController;
 use App\Http\Controllers\Api\TelecomController;
 use App\Http\Controllers\Api\TmCellController;
 use Illuminate\Support\Facades\Route;
@@ -60,4 +62,10 @@ Route::prefix('v1')->group(function () {
 
         Route::post('topup',  [AlemTvController::class, 'topup']);
     });
-});
+
+    Route::post('/payment/create', [SenagatPaymentController::class, 'create']);
+//    Route::post('/payment/check', [SenagatPaymentController::class, 'checkStatus']);
+
+    Route::middleware('main.backend')->group(function () {
+        Route::post('/merchant/sync', [MerchantController::class, 'sync']);
+    });});
