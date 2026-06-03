@@ -59,7 +59,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/tarifs', [AlemTvController::class, 'index']);
         Route::get('/search', [AlemTvController::class, 'search']);
-
+        Route::post('/create',  [AlemTvController::class, 'create']);
         Route::post('topup',  [AlemTvController::class, 'topup']);
     });
 

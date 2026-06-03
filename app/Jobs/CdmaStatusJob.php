@@ -31,7 +31,7 @@ class CdmaStatusJob implements ShouldQueue
             $payment = $this->payment->fresh();
 
             if (! $payment->order_id) {
-                Log::channel('cdma')->warning('order_id is null, releasing', [
+                Log::channel('alemtv')->warning('order_id is null, releasing', [
                     'payment_id' => $payment->id,
                 ]);
                 $this->release(30);
