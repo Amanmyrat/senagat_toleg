@@ -36,7 +36,7 @@ class AlemTvCreateService
             'subject' => $subject,
             'tarif'   => $tarif,
             'period'  => $period,
-            'amount'  => $amount,
+
         ]);
 
         if (! $createResponse['success']) {
