@@ -73,7 +73,7 @@ class AlemTvTarifClient
         $request = $this->http()->get("{$this->baseUrl}/v1/gateway/tarifs", [
             'type' => $type,
         ]);
-        Log::channel('cdma')->info('AlemTv RAW Response', [
+        Log::channel('alemtv')->info('AlemTv RAW Response', [
             'status' => $request->status(),
             'body'   => $request->body(),
             'json'   => $request->json(),
